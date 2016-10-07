@@ -39,14 +39,14 @@ AppAsset::register($this);
     $menuItems[] = ['label' => '<i class="fa fa-sign-in"></i> ' . Yii::t('app', 'Contact'), 'url' => ['/site/contact']];
 
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => '<i class="fa fa-sign-in"></i> ' . Yii::t('app', 'Войти'), 'url' => ['/user/login']];
-        $menuItems[] = ['label' => '<i class="fa fa-user"></i> ' . Yii::t('app', 'Регистрация'), 'url' => ['/user/signup']];
+        $menuItems[] = ['label' => '<i class="fa fa-sign-in"></i> ' . Yii::t('app', 'Log in'), 'url' => ['/user/login']];
+        $menuItems[] = ['label' => '<i class="fa fa-user"></i> ' . Yii::t('app', 'Sign up'), 'url' => ['/user/signup']];
     } else {
-        $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Панель управления'), 'url' => ['/admin/default/index']];
+        $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Control'), 'url' => ['/admin/default/index']];
         $menuItems[] = '<li>'
             . Html::beginForm(['/user/logout'], 'post')
             . Html::submitButton(
-                '<i class="fa fa-sign-out"></i> ' . Yii::t('app', 'Выйти'),
+                '<i class="fa fa-sign-out"></i> ' . Yii::t('app', 'Log out'),
                 ['class' => 'btn btn-link']
             )
             . Html::endForm()

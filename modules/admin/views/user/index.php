@@ -8,12 +8,12 @@ use yii\grid\GridView;
 /* @var $searchModel app\modules\admin\models\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Пользователи');
+$this->title = Yii::t('app', 'Users');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?php Box::begin([
-    'footer' => Html::a(Yii::t('app', 'Создать пользователя'), ['create'], ['class' => 'btn btn-success'])
+    'footer' => Html::a(Yii::t('app', 'Create user'), ['create'], ['class' => 'btn btn-success'])
 ]); ?>
 
     <?= GridView::widget([

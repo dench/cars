@@ -1,5 +1,5 @@
 <?php
-use app\modules\user\models\LoginForm;
+use app\models\form\LoginForm;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 

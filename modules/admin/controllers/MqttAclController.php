@@ -65,6 +65,8 @@ class MqttAclController extends Controller
     {
         $model = new MqttAcl();
 
+        $model->loadDefaultValues();
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {

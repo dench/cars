@@ -5,6 +5,7 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
 /**
@@ -14,17 +15,21 @@ use yii\web\IdentityInterface;
  * @property string $username
  * @property string $password_hash
  * @property string $password_reset_token
+ * @property string $password_mqtt
  * @property string $email
  * @property string $auth_key
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
- * @property string $password write-only password
+ * @property string $password
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-    const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 1;
+    const STATUS_BANNED = 0;
+    const STATUS_REGULAR = 1;
+    const STATUS_SUPER = 2;
+
+    public $password;
 
     /**
      * @inheritdoc
@@ -52,18 +57,34 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['username', 'required'],
             ['username', 'match', 'pattern' => '#^[\w_-]+$#i'],
-            ['username', 'unique', 'targetClass' => self::className(), 'message' => Yii::t('app', 'Имя пользователя уже существует')],
-            ['username', 'string', 'min' => 2, 'max' => 255],
+            ['username', 'unique', 'targetClass' => self::className(), 'message' => Yii::t('app', 'Username already exists')],
+            ['username', 'string', 'min' => 2, 'max' => 20],
             
             ['email', 'required'],
             ['email', 'email'],
-            ['email', 'unique', 'targetClass' => self::className(), 'message' => Yii::t('app', 'E-mail уже существует')],
+            ['email', 'unique', 'targetClass' => self::className(), 'message' => Yii::t('app', 'E-mail already exists')],
             ['email', 'string', 'max' => 255],
             
             ['status', 'integer'],
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            ['status', 'default', 'value' => self::STATUS_REGULAR],
+            ['status', 'in', 'range' => [self::STATUS_REGULAR, self::STATUS_BANNED, self::STATUS_SUPER]],
+
+            ['password', 'string', 'min' => 6],
         ];
+    }
+
+    public static function statusList()
+    {
+        return [
+            self::STATUS_REGULAR => Yii::t('app', 'Regular'),
+            self::STATUS_SUPER => Yii::t('app', 'Super'),
+            self::STATUS_BANNED => Yii::t('app', 'Banned')
+        ];
+    }
+
+    public static function userList()
+    {
+        return ArrayHelper::map(self::find()->all(), 'id', 'username');
     }
 
     /**
@@ -73,12 +94,12 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             'id' => 'ID',
-            'username' => Yii::t('app', 'Имя пользователя'),
+            'username' => Yii::t('app', 'Username'),
             'email' => Yii::t('app', 'E-mail'),
-            'status' => Yii::t('app', 'Статус'),
-            'created_at' => Yii::t('app', 'Зарегистрирован'),
-            'updated_at' => Yii::t('app', 'Изменен'),
-            'password' => Yii::t('app', 'Пароль'),
+            'status' => Yii::t('app', 'Status'),
+            'created_at' => Yii::t('app', 'Created'),
+            'updated_at' => Yii::t('app', 'Updated'),
+            'password' => Yii::t('app', 'Password'),
         ];
     }
 
@@ -87,7 +108,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        return static::find()->where('id = :id and status != :status', ['id' => $id, 'status' => self::STATUS_BANNED])->one();
     }
 
     /**
@@ -106,7 +127,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+        return static::find()->where('username = :username and status != :status', ['username' => $username, 'status' => self::STATUS_BANNED])->one();
     }
 
     /**
@@ -121,10 +142,7 @@ class User extends ActiveRecord implements IdentityInterface
             return null;
         }
 
-        return static::findOne([
-            'password_reset_token' => $token,
-            'status' => self::STATUS_ACTIVE,
-        ]);
+        return static::find()->where('password_reset_token = :token and status != :status', ['token' => $token, 'status' => self::STATUS_BANNED])->one();
     }
 
     /**

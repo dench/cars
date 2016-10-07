@@ -1,6 +1,6 @@
 <?php
 
-use yii\helpers\Html;
+use app\modules\admin\widgets\Box;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\MqttAcl */
@@ -10,12 +10,11 @@ $this->params['breadcrumbs'][] = ['label' => 'Mqtt Acl', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="mqtt-acl-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<?php Box::begin(); ?>
 
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
 
-</div>
+<?php Box::end(); ?>

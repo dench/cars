@@ -1,5 +1,7 @@
 <?php
 
+use app\models\MqttAcl;
+use app\models\User;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -8,20 +10,20 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="mqtt-acl-form">
+<?php
 
-    <?php $form = ActiveForm::begin(); ?>
+?>
 
-    <?= $form->field($model, 'user_id')->textInput() ?>
+<?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'topic')->textInput(['maxlength' => true]) ?>
+<?= $form->field($model, 'user_id')->dropDownList(User::userList()) ?>
 
-    <?= $form->field($model, 'rw')->textInput() ?>
+<?= $form->field($model, 'topic')->textInput(['maxlength' => true]) ?>
 
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
+<?= $form->field($model, 'rw')->dropDownList(MqttAcl::rwList()) ?>
 
-    <?php ActiveForm::end(); ?>
-
+<div class="form-group">
+    <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
 </div>
+
+<?php ActiveForm::end(); ?>

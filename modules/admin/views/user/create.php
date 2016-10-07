@@ -3,10 +3,10 @@
 use app\modules\admin\widgets\Box;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\user\models\User */
+/* @var $model app\models\User */
 
-$this->title = Yii::t('app', 'Создание пользователя');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Пользователи'), 'url' => ['index']];
+$this->title = Yii::t('app', 'Create user');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Users'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

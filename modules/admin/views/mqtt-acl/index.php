@@ -1,5 +1,6 @@
 <?php
 
+use app\modules\admin\widgets\Box;
 use yii\helpers\Html;
 use yii\grid\GridView;
 
@@ -10,14 +11,11 @@ use yii\grid\GridView;
 $this->title = 'Mqtt Acl';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="mqtt-acl-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+<?php Box::begin([
+    'footer' => Html::a(Yii::t('app', 'Create ACL'), ['create'], ['class' => 'btn btn-success'])
+]); ?>
 
-    <p>
-        <?= Html::a('Create Mqtt Acl', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -32,4 +30,5 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
-</div>
+
+<?php Box::end(); ?>
