@@ -3,7 +3,7 @@
 use app\modules\admin\widgets\Box;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\user\models\User */
+/* @var $model \app\models\User */
 
 $this->title = Yii::t('app', 'Редактирование');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Пользователи'), 'url' => ['index']];

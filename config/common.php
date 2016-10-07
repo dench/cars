@@ -13,17 +13,8 @@ return [
     'sourceLanguage' => 'ru_RU',
     'bootstrap' => ['log'],
     'modules' => [
-        'main' => [
-            'class' => 'app\modules\main\Module',
-        ],
-        'user' => [
-            'class' => 'app\modules\user\Module',
-        ],
         'admin' => [
             'class' => 'app\modules\admin\Module',
-        ],
-        'page' => [
-            'class' => 'app\modules\page\Module',
         ],
     ],
     'components' => [
@@ -45,13 +36,7 @@ return [
             'showScriptName' => false,
             'suffix' => '/',
             'rules' => [
-                [
-                    'pattern' => '<slug:[\w_-]+>',
-                    'route' => 'page/default/index',
-                    'suffix' => '.html',
-                ],
-                '' => 'main/default/index',
-                ''
+                '' => 'site/index',
             ],
         ],
     ],

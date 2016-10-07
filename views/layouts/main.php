@@ -36,13 +36,15 @@ AppAsset::register($this);
 
     $menuItems[] = ['label' => false, 'url' => false, 'options' => ['class' => 'navbar-divider']];
 
+    $menuItems[] = ['label' => '<i class="fa fa-sign-in"></i> ' . Yii::t('app', 'Contact'), 'url' => ['/site/contact']];
+
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => '<i class="fa fa-sign-in"></i> ' . Yii::t('app', 'Войти'), 'url' => ['/user/default/login']];
-        $menuItems[] = ['label' => '<i class="fa fa-user"></i> ' . Yii::t('app', 'Регистрация'), 'url' => ['/user/default/signup']];
+        $menuItems[] = ['label' => '<i class="fa fa-sign-in"></i> ' . Yii::t('app', 'Войти'), 'url' => ['/user/login']];
+        $menuItems[] = ['label' => '<i class="fa fa-user"></i> ' . Yii::t('app', 'Регистрация'), 'url' => ['/user/signup']];
     } else {
         $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Панель управления'), 'url' => ['/admin/default/index']];
         $menuItems[] = '<li>'
-            . Html::beginForm(['/user/default/logout'], 'post')
+            . Html::beginForm(['/user/logout'], 'post')
             . Html::submitButton(
                 '<i class="fa fa-sign-out"></i> ' . Yii::t('app', 'Выйти'),
                 ['class' => 'btn btn-link']
