@@ -6,7 +6,9 @@
             [
                 'options' => ['class' => 'sidebar-menu'],
                 'items' => [
-                    ['label' => Yii::t('app', 'Пользователи'), 'icon' => 'fa fa-file-code-o', 'url' => ['/admin/user']],
+                    ['label' => Yii::t('app', 'Users'), 'icon' => 'fa fa-file-code-o', 'url' => ['/admin/user']],
+                    ['label' => Yii::t('app', 'MQTT Users'), 'icon' => 'fa fa-file-code-o', 'url' => ['/admin/mqtt-user']],
+                    ['label' => Yii::t('app', 'MQTT ACL'), 'icon' => 'fa fa-file-code-o', 'url' => ['/admin/mqtt-acl']],
                 ],
             ]
         ) ?>
