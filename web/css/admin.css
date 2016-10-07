@@ -1,0 +1,24 @@
+.nav > li > form > button {
+  padding: 15px;
+  color: #FFF;
+  border: none; }
+  .nav > li > form > button:hover {
+    text-decoration: none;
+    background: rgba(0, 0, 0, 0.1);
+    color: #f6f6f6; }
+@media (max-width: 768px) {
+  .nav > li > form {
+    padding: 3px; } }
+.nav .fa {
+  padding-right: 4px; }
+
+div.required label.control-label:after {
+  content: " *";
+  color: red; }
+
+.list-usercat .btn {
+  margin-top: -4px; }
+.list-usercat h4 {
+  margin: 0; }
+
+/*# sourceMappingURL=admin.css.map */
