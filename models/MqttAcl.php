@@ -65,11 +65,17 @@ class MqttAcl extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getRwName()
+    {
+        $a = self::rwList();
+        return $a[$this->rw];
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['user_id' => 'id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 }

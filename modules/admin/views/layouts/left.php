@@ -8,6 +8,7 @@
                 'items' => [
                     ['label' => Yii::t('app', 'Users'), 'icon' => 'fa fa-file-code-o', 'url' => ['/admin/user']],
                     ['label' => Yii::t('app', 'MQTT ACL'), 'icon' => 'fa fa-file-code-o', 'url' => ['/admin/mqtt-acl']],
+                    ['label' => Yii::t('app', 'Zones'), 'icon' => 'fa fa-file-code-o', 'url' => ['/admin/zone']],
                 ],
             ]
         ) ?>

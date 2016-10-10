@@ -21,13 +21,18 @@ use yii\web\IdentityInterface;
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
+ * @property string $zone_id
  * @property string $password
+ *
+ * @property MqttAcl[] $mqttAcls
+ * @property Zone $zone
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-    const STATUS_BANNED = 0;
-    const STATUS_REGULAR = 1;
+    const STATUS_DISABLED = 0;
+    const STATUS_USER = 1;
     const STATUS_SUPER = 2;
+    const STATUS_CAR = 3;
 
     public $password;
 
@@ -60,14 +65,16 @@ class User extends ActiveRecord implements IdentityInterface
             ['username', 'unique', 'targetClass' => self::className(), 'message' => Yii::t('app', 'Username already exists')],
             ['username', 'string', 'min' => 2, 'max' => 20],
             
-            ['email', 'required'],
             ['email', 'email'],
             ['email', 'unique', 'targetClass' => self::className(), 'message' => Yii::t('app', 'E-mail already exists')],
             ['email', 'string', 'max' => 255],
             
             ['status', 'integer'],
-            ['status', 'default', 'value' => self::STATUS_REGULAR],
-            ['status', 'in', 'range' => [self::STATUS_REGULAR, self::STATUS_BANNED, self::STATUS_SUPER]],
+            ['status', 'default', 'value' => self::STATUS_USER],
+            ['status', 'in', 'range' => [self::STATUS_USER, self::STATUS_DISABLED, self::STATUS_SUPER, self::STATUS_CAR]],
+
+            ['zone_id', 'integer'],
+            ['zone_id', 'exist', 'skipOnError' => true, 'targetClass' => Zone::className(), 'targetAttribute' => ['zone_id' => 'id']],
 
             ['password', 'string', 'min' => 6],
         ];
@@ -76,10 +83,17 @@ class User extends ActiveRecord implements IdentityInterface
     public static function statusList()
     {
         return [
-            self::STATUS_REGULAR => Yii::t('app', 'Regular'),
+            self::STATUS_USER => Yii::t('app', 'User'),
             self::STATUS_SUPER => Yii::t('app', 'Super'),
-            self::STATUS_BANNED => Yii::t('app', 'Banned')
+            self::STATUS_DISABLED => Yii::t('app', 'Disabled'),
+            self::STATUS_CAR => Yii::t('app', 'Car')
         ];
+    }
+
+    public function getStatusName()
+    {
+        $a = self::statusList();
+        return $a[$this->status];
     }
 
     public static function userList()
@@ -99,6 +113,7 @@ class User extends ActiveRecord implements IdentityInterface
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created'),
             'updated_at' => Yii::t('app', 'Updated'),
+            'zone_id' => Yii::t('app', 'Zone'),
             'password' => Yii::t('app', 'Password'),
         ];
     }
@@ -108,7 +123,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::find()->where('id = :id and status != :status', ['id' => $id, 'status' => self::STATUS_BANNED])->one();
+        return static::find()->where('id = :id and status != :status', ['id' => $id, 'status' => self::STATUS_DISABLED])->one();
     }
 
     /**
@@ -127,7 +142,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return static::find()->where('username = :username and status != :status', ['username' => $username, 'status' => self::STATUS_BANNED])->one();
+        return static::find()->where('username = :username and status != :status', ['username' => $username, 'status' => self::STATUS_DISABLED])->one();
     }
 
     /**
@@ -142,7 +157,7 @@ class User extends ActiveRecord implements IdentityInterface
             return null;
         }
 
-        return static::find()->where('password_reset_token = :token and status != :status', ['token' => $token, 'status' => self::STATUS_BANNED])->one();
+        return static::find()->where('password_reset_token = :token and status != :status', ['token' => $token, 'status' => self::STATUS_DISABLED])->one();
     }
 
     /**
@@ -229,5 +244,21 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getZone()
+    {
+        return $this->hasOne(Zone::className(), ['id' => 'zone_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMqttAcls()
+    {
+        return $this->hasMany(MqttAcl::className(), ['user_id' => 'id']);
     }
 }

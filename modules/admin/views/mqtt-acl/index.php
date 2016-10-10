@@ -1,5 +1,7 @@
 <?php
 
+use app\components\SetColumn;
+use app\models\MqttAcl;
 use app\modules\admin\widgets\Box;
 use yii\helpers\Html;
 use yii\grid\GridView;
@@ -20,12 +22,22 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'user_id',
+            [
+                'attribute' => 'id',
+                'headerOptions' => ['width' => '70'],
+            ],
+            [
+                'attribute' => 'username',
+                'value' => 'user.username',
+            ],
             'topic',
-            'rw',
+            [
+                'class' => SetColumn::className(),
+                'attribute' => 'rw',
+                'name' => 'rwName',
+                'filter' => MqttAcl::rwList(),
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

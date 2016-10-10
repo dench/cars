@@ -1,5 +1,8 @@
 <?php
 
+use app\components\SetColumn;
+use app\models\User;
+use app\models\Zone;
 use app\modules\admin\widgets\Box;
 use yii\helpers\Html;
 use yii\grid\GridView;
@@ -20,11 +23,24 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            
-            'id',
+            [
+                'attribute' => 'id',
+                'headerOptions' => ['width' => '70'],
+            ],
             'username',
             'email:email',
-            'status',
+            [
+                'class' => SetColumn::className(),
+                'attribute' => 'status',
+                'name' => 'statusName',
+                'filter' => User::statusList(),
+            ],
+            [
+                'class' => SetColumn::className(),
+                'attribute' => 'zone_id',
+                'name' => 'zone.name',
+                'filter' => Zone::zoneList(),
+            ],
             'created_at:date',
 
             ['class' => 'yii\grid\ActionColumn'],

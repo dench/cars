@@ -11,6 +11,8 @@ use app\models\MqttAcl;
  */
 class MqttAclSearch extends MqttAcl
 {
+    public $username;
+
     /**
      * @inheritdoc
      */
@@ -18,7 +20,7 @@ class MqttAclSearch extends MqttAcl
     {
         return [
             [['id', 'user_id', 'rw'], 'integer'],
-            [['topic'], 'safe'],
+            [['topic', 'username'], 'safe'],
         ];
     }
 
@@ -44,9 +46,16 @@ class MqttAclSearch extends MqttAcl
 
         // add conditions that should always apply here
 
+        $query->joinWith(['user']);
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        $dataProvider->sort->attributes['username'] = [
+            'asc' => ['user.username' => SORT_ASC],
+            'desc' => ['user.username' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -58,12 +67,13 @@ class MqttAclSearch extends MqttAcl
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
+            'mqtt_acl.id' => $this->id,
             'user_id' => $this->user_id,
             'rw' => $this->rw,
         ]);
 
         $query->andFilterWhere(['like', 'topic', $this->topic]);
+        $query->andFilterWhere(['like', 'user.username', $this->username]);
 
         return $dataProvider;
     }

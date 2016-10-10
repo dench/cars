@@ -22,7 +22,7 @@ use yii\helpers\Html;
 
             $menuItems[] = ['label' => '<i class="fa fa-home"></i> ' . Yii::t('app', 'Home'), 'encode' => false, 'url' => Yii::$app->homeUrl];
             $menuItems[] = '<li>'
-                . Html::beginForm(['/user/default/logout'], 'post')
+                . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
                     '<i class="fa fa-sign-out"></i> ' . Yii::t('app', 'Log out'),
                     ['class' => 'btn btn-link']
