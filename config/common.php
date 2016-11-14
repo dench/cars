@@ -9,12 +9,15 @@ return [
     'version' => '0.1',
     'name' => 'Site',
     'basePath' => dirname(__DIR__),
-    'language' => 'ru_RU',
-    'sourceLanguage' => 'ru_RU',
+    'language' => 'en',
+    'sourceLanguage' => 'en',
     'bootstrap' => ['log'],
     'modules' => [
         'admin' => [
             'class' => 'app\modules\admin\Module',
+        ],
+        'personal' => [
+            'class' => 'app\modules\personal\Module',
         ],
     ],
     'components' => [
@@ -31,12 +34,11 @@ return [
         'log' => [
             'class' => 'yii\log\Dispatcher',
         ],
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'suffix' => '/',
-            'rules' => [
-                '' => 'site/index',
+        'i18n' => [
+            'translations' => [
+                'app' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                ],
             ],
         ],
     ],

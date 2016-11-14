@@ -45,4 +45,19 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+
+    public function actionAbout()
+    {
+        return $this->render('about');
+    }
+
+    public function actionLeaderboards()
+    {
+        return $this->render('leaderboards');
+    }
+
+    public function actionFaq()
+    {
+        return $this->render('faq');
+    }
 }

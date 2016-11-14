@@ -20,7 +20,9 @@ use yii\widgets\ActiveForm;
 
 <?= $form->field($model, 'status')->dropDownList(User::statusList()) ?>
 
-<?= $form->field($model, 'zone_id')->dropDownList(Zone::zoneList(), ['prompt' => Yii::t('app', 'None')]) ?>
+<?= $form->field($model, 'energy')->textInput(['maxlength' => true]) ?>
+
+<?= $form->field($model, 'mqtt_id')->textInput(['maxlength' => true]) ?>
 
 <div class="form-group">
     <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Save'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

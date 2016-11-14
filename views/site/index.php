@@ -2,8 +2,12 @@
 
 /* @var $this yii\web\View */
 
+use app\widgets\H1;
+
 $this->title = 'My Yii Application';
 ?>
+
+<?= H1::run($this->title); ?>
 
 <?php
 /*

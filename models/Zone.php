@@ -14,7 +14,6 @@ use yii\helpers\ArrayHelper;
  * @property integer $status
  *
  * @property User $user
- * @property User[] $users
  */
 class Zone extends \yii\db\ActiveRecord
 {
@@ -38,7 +37,7 @@ class Zone extends \yii\db\ActiveRecord
         return [
             [['name', 'user_id'], 'required'],
             [['user_id', 'status'], 'integer'],
-            [['name'], 'string', 'max' => 255],
+            [['name'], 'string', 'max' => 20],
             [['name'], 'unique'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             ['status', 'default', 'value' => self::STATUS_DISABLED],
@@ -85,13 +84,5 @@ class Zone extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUsers()
-    {
-        return $this->hasMany(User::className(), ['zone_id' => 'id']);
     }
 }

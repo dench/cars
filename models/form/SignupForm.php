@@ -1,6 +1,7 @@
 <?php
 namespace app\models\form;
 
+use app\models\MqttUser;
 use app\models\User;
 use yii\base\Model;
 

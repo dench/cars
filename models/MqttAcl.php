@@ -7,11 +7,11 @@ use Yii;
  * This is the model class for table "mqtt_acl".
  *
  * @property integer $id
- * @property integer $user_id
+ * @property integer $mqtt_id
  * @property string $topic
  * @property integer $rw
  *
- * @property User $user
+ * @property MqttUser $client
  */
 class MqttAcl extends \yii\db\ActiveRecord
 {
@@ -33,11 +33,11 @@ class MqttAcl extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'topic', 'rw'], 'required'],
-            [['user_id', 'rw'], 'integer'],
+            [['mqtt_id', 'topic', 'rw'], 'required'],
+            [['mqtt_id', 'rw'], 'integer'],
             [['topic'], 'string', 'max' => 255],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
-            ['topic', 'unique', 'targetAttribute' => ['topic', 'user_id'], 'targetClass' => self::className()],
+            [['mqtt_id'], 'exist', 'skipOnError' => true, 'targetClass' => MqttUser::className(), 'targetAttribute' => ['mqtt_id' => 'id']],
+            ['topic', 'unique', 'targetAttribute' => ['topic', 'mqtt_id'], 'targetClass' => self::className()],
             ['rw', 'default', 'value' => self::READ_ONLY],
             ['rw', 'in', 'range' => [self::READ_ONLY, self::WRITE_ONLY, self::READ_WRITE]],
         ];
@@ -50,7 +50,7 @@ class MqttAcl extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_id' => 'User ID',
+            'mqtt_id' => 'Mqtt ID',
             'topic' => 'Topic',
             'rw' => 'Rw',
         ];
@@ -74,8 +74,8 @@ class MqttAcl extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUser()
+    public function getClient()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        return $this->hasOne(MqttUser::className(), ['id' => 'mqtt_id']);
     }
 }

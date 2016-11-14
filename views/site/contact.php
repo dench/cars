@@ -4,6 +4,7 @@
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model \app\models\form\ContactForm */
 
+use app\widgets\H1;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\captcha\Captcha;
@@ -12,7 +13,7 @@ $this->title = 'Contact';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-contact">
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?= H1::run($this->title); ?>
 
     <?php if (Yii::$app->session->hasFlash('contactFormSubmitted')): ?>
 

@@ -12,11 +12,23 @@ $config = [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        'request' => [
-            'cookieValidationKey' => '',
-        ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
+        ],
+        'request' => [
+            'class' => 'app\components\LangRequest'
+        ],
+        'urlManager' => [
+            'class' => 'app\components\LangUrlManager',
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'suffix'=>'/',
+            'rules' => [
+                '' => 'site/index',
+                '<action:(about|leaderboards|faq|lang)>' => 'site/<action>',
+                '<action:(login|signup)>' => 'user/<action>',
+                'blog' => 'blog/index',
+            ],
         ],
     ],
 ];

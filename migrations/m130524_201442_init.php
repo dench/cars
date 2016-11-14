@@ -18,11 +18,12 @@ class m130524_201442_init extends Migration
             'auth_key' => $this->string(32)->notNull(),
             'password_hash' => $this->string()->notNull(),
             'password_reset_token' => $this->string()->unique(),
-            'password_mqtt' => $this->string(),
-            'email' => $this->string()->notNull()->unique(),
+            'email' => $this->string()->notNull(),
             'status' => $this->smallInteger()->notNull()->defaultValue(1),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
+            'mqtt_id' => $this->integer(),
+            'energy' => $this->integer()->notNull()->defaultValue(0),
         ], $tableOptions);
     }
 

@@ -1,7 +1,6 @@
 <?php
 
 namespace app\modules\admin;
-use Yii;
 
 /**
  * admin module definition class

@@ -16,7 +16,7 @@ use yii\widgets\ActiveForm;
 
 <?php $form = ActiveForm::begin(); ?>
 
-<?= $form->field($model, 'user_id')->dropDownList(User::userList()) ?>
+<?= $form->field($model, 'mqtt_id')->textInput(['maxlength' => true]) ?>
 
 <?= $form->field($model, 'topic')->textInput(['maxlength' => true]) ?>
 

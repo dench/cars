@@ -21,6 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'options' => ['class' => 'grid-view table-responsive'],
         'columns' => [
 
             [
@@ -28,8 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions' => ['width' => '70'],
             ],
             [
-                'attribute' => 'username',
-                'value' => 'user.username',
+                'attribute' => 'mqtt_id',
+                'headerOptions' => ['width' => '70'],
             ],
             'topic',
             [

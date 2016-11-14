@@ -34,3 +34,28 @@ div.required label.control-label:after {
     margin: 0;
   }
 }
+
+.double-input {
+  width: 100%;
+  .form-control {
+    width: 50%;
+  }
+}
+
+.grid-view {
+  .summary {
+    padding: 5px;
+  }
+  th {
+    white-space: nowrap;
+  }
+}
+
+.nav {
+  li {
+    form {
+      padding: 0;
+      margin: 0;
+    }
+  }
+}

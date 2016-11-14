@@ -22,10 +22,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'options' => ['class' => 'grid-view table-responsive'],
         'columns' => [
             [
                 'attribute' => 'id',
                 'headerOptions' => ['width' => '70'],
+                'contentOptions' => ['class' => 'text-right'],
             ],
             'username',
             'email:email',
@@ -36,10 +38,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => User::statusList(),
             ],
             [
-                'class' => SetColumn::className(),
-                'attribute' => 'zone_id',
-                'name' => 'zone.name',
-                'filter' => Zone::zoneList(),
+                'attribute' => 'energy',
+                'filter' => '<div class="input-group double-input">' .
+                            Html::activeTextInput($searchModel, 'energy_from', ['class' => 'form-control']) .
+                            Html::activeTextInput($searchModel, 'energy_to', ['class' => 'form-control']) .
+                            '</div>',
+                'headerOptions' => ['width' => '150'],
+                'contentOptions' => ['class' => 'text-center'],
             ],
             'created_at:date',
 

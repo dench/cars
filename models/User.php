@@ -15,24 +15,24 @@ use yii\web\IdentityInterface;
  * @property string $username
  * @property string $password_hash
  * @property string $password_reset_token
- * @property string $password_mqtt
  * @property string $email
  * @property string $auth_key
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
- * @property string $zone_id
+ * @property integer $mqtt_id
+ * @property string $energy
+ *
  * @property string $password
  *
- * @property MqttAcl[] $mqttAcls
- * @property Zone $zone
+ * @property Timeline[] $timelines
+ * @property MqttUser $client
+ * @property Zone[] $zones
  */
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DISABLED = 0;
-    const STATUS_USER = 1;
-    const STATUS_SUPER = 2;
-    const STATUS_CAR = 3;
+    const STATUS_ENABLED = 1;
 
     public $password;
 
@@ -60,33 +60,31 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            ['username', 'required'],
+            [['username', 'email'], 'required'],
+            [['status', 'mqtt_id', 'energy'], 'integer'],
+
+            [['username'], 'string', 'min' => 2, 'max' => 20],
+            [['password'], 'string', 'min' => 6],
+            [['email'], 'string', 'max' => 255],
+
             ['username', 'match', 'pattern' => '#^[\w_-]+$#i'],
             ['username', 'unique', 'targetClass' => self::className(), 'message' => Yii::t('app', 'Username already exists')],
-            ['username', 'string', 'min' => 2, 'max' => 20],
-            
+
             ['email', 'email'],
             ['email', 'unique', 'targetClass' => self::className(), 'message' => Yii::t('app', 'E-mail already exists')],
-            ['email', 'string', 'max' => 255],
-            
-            ['status', 'integer'],
-            ['status', 'default', 'value' => self::STATUS_USER],
-            ['status', 'in', 'range' => [self::STATUS_USER, self::STATUS_DISABLED, self::STATUS_SUPER, self::STATUS_CAR]],
 
-            ['zone_id', 'integer'],
-            ['zone_id', 'exist', 'skipOnError' => true, 'targetClass' => Zone::className(), 'targetAttribute' => ['zone_id' => 'id']],
+            ['status', 'default', 'value' => self::STATUS_ENABLED],
+            ['status', 'in', 'range' => [self::STATUS_ENABLED, self::STATUS_DISABLED]],
 
-            ['password', 'string', 'min' => 6],
+            [['mqtt_id'], 'exist', 'skipOnError' => true, 'targetClass' => MqttUser::className(), 'targetAttribute' => ['mqtt_id' => 'id']],
         ];
     }
 
     public static function statusList()
     {
         return [
-            self::STATUS_USER => Yii::t('app', 'User'),
-            self::STATUS_SUPER => Yii::t('app', 'Super'),
             self::STATUS_DISABLED => Yii::t('app', 'Disabled'),
-            self::STATUS_CAR => Yii::t('app', 'Car')
+            self::STATUS_ENABLED => Yii::t('app', 'Enabled')
         ];
     }
 
@@ -113,8 +111,8 @@ class User extends ActiveRecord implements IdentityInterface
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created'),
             'updated_at' => Yii::t('app', 'Updated'),
-            'zone_id' => Yii::t('app', 'Zone'),
             'password' => Yii::t('app', 'Password'),
+            'energy' => 'Energy',
         ];
     }
 
@@ -249,16 +247,24 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getZone()
+    public function getTimelines()
     {
-        return $this->hasOne(Zone::className(), ['id' => 'zone_id']);
+        return $this->hasMany(Timeline::className(), ['user_id' => 'id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getMqttAcls()
+    public function getClient()
     {
-        return $this->hasMany(MqttAcl::className(), ['user_id' => 'id']);
+        return $this->hasOne(MqttUser::className(), ['id' => 'mqtt_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getZones()
+    {
+        return $this->hasMany(Zone::className(), ['user_id' => 'id']);
     }
 }

@@ -1,14 +1,41 @@
+$screen-xs-min: 480px;
+$screen-sm-min: 768px;
+$screen-md-min: 992px;
+$screen-lg-min: 1200px;
+$screen-xxs-max: ($screen-xs-min - 1);
+$screen-xs-max: ($screen-sm-min - 1);
+$screen-sm-max: ($screen-md-min - 1);
+$screen-md-max: ($screen-lg-min - 1);
+
+@font-face {
+  font-family: 'Hermes';
+  src: url('../fonts/Hermes.eot');
+  src: url('../fonts/Hermes.woff') format('woff'), url('../fonts/Hermes.ttf') format('truetype'), url('../fonts/Hermes.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
 html,
 body {
   height: 100%;
 }
 
-.page-container {
-  min-height: 100%;
+body {
+  background: url("../img/bg_footer.jpg") repeat-x bottom center #000;
+  background-size: 100%;
+  font-family: Hermes, sans-serif;
+  font-size: 1.04em;
+  text-transform: uppercase;
+  color: #636161;
 }
 
-.content-container {
-  padding-top: 70px;
+.page-container {
+  min-height: 100%;
+  background: radial-gradient(at center 50px, #1F1C1C, transparent);
+}
+
+.container-content {
+  padding-top: 65px;
 }
 
 .footer-fix {
@@ -17,7 +44,6 @@ body {
 
 .footer {
   margin-top: -60px;
-  border-top: 1px solid #ddd;
   height: 59px;
   line-height: 59px;
   box-sizing: border-box;
@@ -25,4 +51,104 @@ body {
 
 .footer p {
   margin: 0;
+}
+
+#game-area {
+  width: 100%;
+  max-width: 640px;
+  max-height: 480px;
+  background-color: #000;
+  border: none;
+}
+
+.navbar {
+  padding-left: 0;
+  padding-right: 0;
+  .nav-link {
+    border: none;
+    padding-left: 0;
+    padding-right: 0;
+    background: none;
+    i {
+      display: none;
+    }
+  }
+  &-dark {
+    background: #000000;
+  }
+  &-brand {
+    height: 38px;
+    padding: 0;
+  }
+  &-toggler {
+    float: right;
+    border-color: #555;
+    color: #555;
+  }
+}
+@media (max-width: $screen-xxs-max) {
+  .navbar {
+    &-header {
+      overflow: hidden;
+    }
+    .nav-link {
+      i {
+        text-align: center;
+        width: 15px;
+        display: inline-block;
+        margin-right: 5px;
+      }
+    }
+  }
+}
+
+.carousel-home {
+  @media (max-width: $screen-xxs-max) {
+    .carousel-inner > .carousel-item > img {
+      max-width: 200%;
+      margin-left: -50%;
+      margin-top: -10%;
+    }
+  }
+  .carousel-control {
+    %icon {
+      width: 60px;
+      height: 60px;
+      margin: -30px 0 0 0;
+      top: 45%;
+    }
+    @media (max-width: $screen-xs-max) {
+      %icon {
+        width: 30px;
+        height: 30px;
+      }
+    }
+    .icon-prev {
+      @extend %icon;
+      left: 15%;
+    }
+    .icon-next {
+      @extend %icon;
+      right: 15%;
+    }
+  }
+  .carousel-caption {
+
+  }
+}
+
+@media (max-width: $screen-xs-max) {
+
+}
+
+@media (min-width: $screen-sm-min) {
+
+}
+
+@media (min-width: $screen-md-min) {
+
+}
+
+@media (min-width: $screen-lg-min) {
+
 }
