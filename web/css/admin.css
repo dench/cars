@@ -1,16 +1,41 @@
-.nav > li > form > button {
-  padding: 15px;
-  color: #FFF;
-  border: none; }
-  .nav > li > form > button:hover {
-    text-decoration: none;
-    background: rgba(0, 0, 0, 0.1);
-    color: #f6f6f6; }
-@media (max-width: 768px) {
-  .nav > li > form {
-    padding: 3px; } }
+.nav > li > form {
+  padding: 0;
+  margin: 0; }
+  .nav > li > form > button {
+    color: #FFF;
+    border: none;
+    background: none; }
+    .nav > li > form > button:hover {
+      text-decoration: none;
+      background: rgba(0, 0, 0, 0.1);
+      color: #f6f6f6; }
 .nav .fa {
   padding-right: 4px; }
+
+.navbar {
+  padding: 0; }
+  .navbar .nav-link {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: .6rem !important;
+    padding-right: .6rem !important;
+    line-height: 50px !important; }
+
+@media (max-width: 768px) {
+  .main-header .logo {
+    display: none; } }
+.main-header .sidebar-toggle {
+  padding: 0;
+  line-height: 50px;
+  width: 50px;
+  text-align: center; }
+
+.content-header > .breadcrumb {
+  float: none;
+  position: relative;
+  top: 0;
+  right: 0;
+  padding: 0; }
 
 div.required label.control-label:after {
   content: " *";
@@ -31,8 +56,13 @@ div.required label.control-label:after {
 .grid-view th {
   white-space: nowrap; }
 
-.nav li form {
-  padding: 0;
-  margin: 0; }
+.tab-content {
+  background-color: #fff;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding: 15px;
+  margin-right: auto;
+  margin-left: auto; }
 
 /*# sourceMappingURL=admin.css.map */

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ce05c7b6a71991020a7b82c6493841d5",
-    "content-hash": "e51fbd682553a33e0905d566589ec577",
+    "hash": "5d36aed362c3060b9a87f1b97ae45996",
+    "content-hash": "2a2341231396cec8452478c770c14729",
     "packages": [
         {
             "name": "2amigos/yii2-ckeditor-widget",
@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/2amigos/yii2-ckeditor-widget.git",
-                "reference": "82b7179f338208bd0427ff204d6d3b002330ff06"
+                "reference": "7092d708661b67965a9facce9e9f5e25ff39cac2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/2amigos/yii2-ckeditor-widget/zipball/82b7179f338208bd0427ff204d6d3b002330ff06",
-                "reference": "82b7179f338208bd0427ff204d6d3b002330ff06",
+                "url": "https://api.github.com/repos/2amigos/yii2-ckeditor-widget/zipball/7092d708661b67965a9facce9e9f5e25ff39cac2",
+                "reference": "7092d708661b67965a9facce9e9f5e25ff39cac2",
                 "shasum": ""
             },
             "require": {
@@ -65,7 +65,7 @@
                 "yii 2",
                 "yii2"
             ],
-            "time": "2016-09-25 11:23:21"
+            "time": "2016-11-10 11:32:46"
         },
         {
             "name": "bower-asset/almasaeed2010/adminlte",
@@ -573,12 +573,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "a6d30977565081bc9b177b627bff2e2ba905224c"
+                "reference": "7bf15c78b489f72769c44edfbdb22a024f477324"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/a6d30977565081bc9b177b627bff2e2ba905224c",
-                "reference": "a6d30977565081bc9b177b627bff2e2ba905224c",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/7bf15c78b489f72769c44edfbdb22a024f477324",
+                "reference": "7bf15c78b489f72769c44edfbdb22a024f477324",
                 "shasum": ""
             },
             "require": {
@@ -618,7 +618,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2016-10-09 11:45:02"
+            "time": "2016-11-13 15:37:50"
         },
         {
             "name": "yiisoft/yii2",
@@ -626,12 +626,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "59e3e28e10f9915449e00a5f944405c044696f84"
+                "reference": "0584036657b2515ccf8f284a4fa8f98f7cb95c6b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/59e3e28e10f9915449e00a5f944405c044696f84",
-                "reference": "59e3e28e10f9915449e00a5f944405c044696f84",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/0584036657b2515ccf8f284a4fa8f98f7cb95c6b",
+                "reference": "0584036657b2515ccf8f284a4fa8f98f7cb95c6b",
                 "shasum": ""
             },
             "require": {
@@ -712,7 +712,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2016-10-28 08:17:27"
+            "time": "2016-11-14 12:24:53"
         },
         {
             "name": "yiisoft/yii2-bootstrap",
@@ -897,12 +897,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fzaninotto/Faker.git",
-                "reference": "f207b4a855fc971241d7084b923ff2e78096104b"
+                "reference": "70572abb2ee34c79a566dc13d016f89011f8365e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/f207b4a855fc971241d7084b923ff2e78096104b",
-                "reference": "f207b4a855fc971241d7084b923ff2e78096104b",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/70572abb2ee34c79a566dc13d016f89011f8365e",
+                "reference": "70572abb2ee34c79a566dc13d016f89011f8365e",
                 "shasum": ""
             },
             "require": {
@@ -939,7 +939,7 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2016-10-24 07:55:38"
+            "time": "2016-11-09 08:42:27"
         },
         {
             "name": "phpspec/php-diff",

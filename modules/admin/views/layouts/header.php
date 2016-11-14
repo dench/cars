@@ -21,11 +21,11 @@ use yii\helpers\Html;
             <?php
 
             $menuItems[] = ['label' => '<i class="fa fa-home"></i> ' . Yii::t('app', 'Home'), 'encode' => false, 'url' => Yii::$app->homeUrl];
-            $menuItems[] = '<li>'
+            $menuItems[] = '<li class="nav-item">'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
                     '<i class="fa fa-sign-out"></i> ' . Yii::t('app', 'Log out'),
-                    ['class' => 'btn btn-link']
+                    ['class' => 'nav-link']
                 )
                 . Html::endForm()
                 . '</li>';

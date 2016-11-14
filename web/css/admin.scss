@@ -1,23 +1,56 @@
 .nav {
   > li {
     > form {
+      padding: 0;
+      margin: 0;
       > button {
-        padding: 15px;
         color: #FFF;
         border: none;
+        background: none;
         &:hover {
           text-decoration: none;
           background: rgba(0,0,0,0.1);
           color: #f6f6f6;
         }
       }
-      @media(max-width:768px) {
-        padding: 3px;
-      }
     }
   }
   .fa {
     padding-right: 4px;
+  }
+}
+
+.navbar {
+  padding: 0;
+  .nav-link {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: .6rem !important;
+    padding-right: .6rem !important;
+    line-height: 50px !important;
+  }
+}
+
+.main-header {
+  @media(max-width:768px) {
+    .logo {
+      display: none;
+    }
+  }
+  .sidebar-toggle {
+    padding: 0;
+    line-height: 50px;
+    width: 50px;
+    text-align: center;
+  }
+}
+.content-header {
+  > .breadcrumb {
+    float: none;
+    position: relative;
+    top: 0;
+    right: 0;
+    padding: 0;
   }
 }
 
@@ -51,11 +84,12 @@ div.required label.control-label:after {
   }
 }
 
-.nav {
-  li {
-    form {
-      padding: 0;
-      margin: 0;
-    }
-  }
+.tab-content {
+  background-color: #fff;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding: 15px;
+  margin-right: auto;
+  margin-left: auto;
 }

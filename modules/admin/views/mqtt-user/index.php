@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'super',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'app\components\ActionColumnFa'],
         ],
     ]); ?>
 

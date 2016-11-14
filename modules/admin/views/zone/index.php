@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => Zone::statusList(),
             ],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'app\components\ActionColumnFa'],
         ],
     ]); ?>
 

@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'from:datetime',
             'to:datetime',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'app\components\ActionColumnFa'],
         ],
     ]); ?>
 

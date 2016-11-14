@@ -137,6 +137,16 @@ body {
   }
 }
 
+#lang {
+  a {
+    font-size: 12px;
+    color: #CCC;
+    &.active {
+      color: darkorange;
+    }
+  }
+}
+
 @media (max-width: $screen-xs-max) {
 
 }

@@ -89,4 +89,10 @@ body {
 .carousel-home .carousel-control .icon-next {
   right: 15%; }
 
+#lang a {
+  font-size: 12px;
+  color: #CCC; }
+  #lang a.active {
+    color: darkorange; }
+
 /*# sourceMappingURL=style.css.map */

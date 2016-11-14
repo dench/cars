@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => MqttAcl::rwList(),
             ],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'app\components\ActionColumnFa'],
         ],
     ]); ?>
 

@@ -5,29 +5,28 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\modules\admin\RobotSearch */
+/* @var $searchModel app\modules\admin\models\PageSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Robots');
+$this->title = Yii::t('app', 'Pages');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?php Box::begin([
-    'footer' => Html::a(Yii::t('app', 'Create robot'), ['create'], ['class' => 'btn btn-success'])
+    'footer' => Html::a(Yii::t('app', 'Create page'), ['create'], ['class' => 'btn btn-success'])
 ]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'options' => ['class' => 'grid-view table-responsive'],
         'columns' => [
 
-            [
-                'attribute' => 'id',
-                'headerOptions' => ['width' => '70'],
-            ],
-            'mqtt_id',
+            'id',
+            'slug',
             'name',
+            'created_at',
+            'updated_at',
+            'enabled',
 
             ['class' => 'app\components\ActionColumnFa'],
         ],

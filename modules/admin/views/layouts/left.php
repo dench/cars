@@ -12,6 +12,7 @@
                     ['label' => Yii::t('app', 'Robots'), 'icon' => 'fa fa-file-code-o', 'url' => ['/admin/robot']],
                     ['label' => Yii::t('app', 'Zones'), 'icon' => 'fa fa-file-code-o', 'url' => ['/admin/zone']],
                     ['label' => Yii::t('app', 'Timeline'), 'icon' => 'fa fa-file-code-o', 'url' => ['/admin/timeline']],
+                    ['label' => Yii::t('app', 'Page'), 'icon' => 'fa fa-file-code-o', 'url' => ['/admin/page']],
                 ],
             ]
         ) ?>
