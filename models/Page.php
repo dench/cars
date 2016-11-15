@@ -84,16 +84,25 @@ class Page extends ActiveRecord
 
     public static function viewPage($id)
     {
-        Yii::$app->view->params['page'] = self::findOne($id);
-        Yii::$app->view->title = Yii::$app->view->params['page']->title;
-        Yii::$app->view->registerMetaTag([
-            'name' => 'description',
-            'content' => Yii::$app->view->params['page']->description
-        ]);
-        Yii::$app->view->registerMetaTag([
-            'name' => 'keywords',
-            'content' => Yii::$app->view->params['page']->keywords
-        ]);
+        if (is_int($id)) {
+            $page = self::findOne($id);
+        } else {
+            $page = self::findOne(['slug' => $id]);
+        }
+        Yii::$app->view->params['page'] = $page;
+        Yii::$app->view->title = $page->title;
+        if ($page->description) {
+            Yii::$app->view->registerMetaTag([
+                'name' => 'description',
+                'content' => $page->description
+            ]);
+        }
+        if ($page->keywords) {
+            Yii::$app->view->registerMetaTag([
+                'name' => 'keywords',
+                'content' => $page->keywords
+            ]);
+        }
     }
 
     /**
