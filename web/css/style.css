@@ -29,7 +29,6 @@ body {
 .footer {
   margin-top: -60px;
   height: 59px;
-  line-height: 59px;
   box-sizing: border-box; }
 
 .footer p {
@@ -49,13 +48,14 @@ body {
     border: none;
     padding-left: 0;
     padding-right: 0;
-    background: none; }
+    background: none;
+    text-transform: uppercase; }
     .navbar .nav-link i {
       display: none; }
   .navbar-dark {
     background: #000000; }
   .navbar-brand {
-    height: 38px;
+    line-height: 38px;
     padding: 0; }
   .navbar-toggler {
     float: right;
@@ -91,8 +91,8 @@ body {
 
 #lang a {
   font-size: 12px;
-  color: #CCC; }
+  color: #888; }
   #lang a.active {
-    color: darkorange; }
+    color: #FFF; }
 
 /*# sourceMappingURL=style.css.map */

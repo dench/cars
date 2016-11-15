@@ -40,7 +40,7 @@ FontAwesomeAsset::register($this);
 
     $menuItems[] = ['label' => '<i class="fa fa-info"></i> ' . Yii::t('app', 'About'), 'url' => ['/site/about']];
     $menuItems[] = ['label' => '<i class="fa fa-star"></i> ' . Yii::t('app', 'Leaderboards'), 'url' => ['/site/leaderboards']];
-    $menuItems[] = ['label' => '<i class="fa fa-usd"></i> ' . Yii::t('app', 'Blog'), 'url' => ['/blog/index']];
+    $menuItems[] = ['label' => '<i class="fa fa-comments"></i> ' . Yii::t('app', 'Blog'), 'url' => ['/blog/index']];
     $menuItems[] = ['label' => '<i class="fa fa-question"></i> ' . Yii::t('app', 'FAQ'), 'url' => ['/site/faq']];
 
     echo Nav::widget([
@@ -55,7 +55,7 @@ FontAwesomeAsset::register($this);
         $menuItems[] = ['label' => '<i class="fa fa-sign-in"></i> ' . Yii::t('app', 'Log in'), 'url' => ['/user/login']];
         $menuItems[] = ['label' => '<i class="fa fa-user"></i> ' . Yii::t('app', 'Sign up'), 'url' => ['/user/signup']];
     } else {
-        $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Personal'), 'url' => ['/personal/default/index']];
+        $menuItems[] = ['label' => '<i class="fa fa-user"></i> ' . Yii::t('app', 'Personal'), 'url' => ['/personal/default/index']];
         $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Control'), 'url' => ['/admin/default/index']];
         $menuItems[] = '<li class="nav-item">'
             . Html::beginForm(['/user/logout'], 'post')

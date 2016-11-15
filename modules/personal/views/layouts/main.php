@@ -3,13 +3,16 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use app\assets\AppAsset;
 use app\assets\PersonalAsset;
+use app\widgets\Lang;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
 
+AppAsset::register($this);
 PersonalAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -25,32 +28,31 @@ PersonalAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 
-<div class="container-fluid page-container">
+<div class="page-container">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::t('app', 'Personal'),
-        'brandUrl' => Url::to(['/personal/default/index']),
+        'brandLabel' => Html::img('/img/rad_icon.png', ['height' => '100%']) . '</a><a href="'.Url::to(['/personal/default/index']).'" class="navbar-brand">' . Yii::t('app', 'Personal'),
+        'brandUrl' => ['/'],
         'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
+            'class' => 'navbar-dark',
         ],
     ]);
-
-    $menuItems[] = ['label' => false, 'url' => false, 'options' => ['class' => 'navbar-divider']];
 
     $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Timeline'), 'url' => ['/personal/timeline/index']];
     $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Home'), 'url' => ['/site/index']];
     $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Control'), 'url' => ['/admin/default/index']];
-    $menuItems[] = '<li>'
+
+    $menuItems[] = '<li class="nav-item">'
         . Html::beginForm(['/user/logout'], 'post')
         . Html::submitButton(
             '<i class="fa fa-sign-out"></i> ' . Yii::t('app', 'Log out'),
-            ['class' => 'btn btn-link']
+            ['class' => 'nav-link']
         )
         . Html::endForm()
         . '</li>';
 
     echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
+        'options' => ['class' => 'navbar-nav pull-sm-right'],
         'encodeLabels' => false,
         'items' => $menuItems,
     ]);
@@ -67,9 +69,7 @@ PersonalAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <?= Lang::widget(); ?>
     </div>
 </footer>
 

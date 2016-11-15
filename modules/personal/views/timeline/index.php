@@ -43,7 +43,7 @@ $mktime = mktime(0, 0, 0);
             for ($j = 0; $j < 48; $j++) {
                 $t = $mktime+$day+$j*1800;
                 if ($j % 2) $class = " class=\"even\""; else $class = "";
-                echo "<td" . $class . " rel=\"" . $t . "\" title=\"" . Yii::$app->formatter->asDate($t, 'php:d.m.Y, H:i') . "\">30</td>";
+                echo "<td" . $class . " rel=\"" . $t . "\" title=\"" . Yii::$app->formatter->asDatetime($t) . "\">30</td>";
             }
             echo "</tr>";
         }

@@ -1,39 +1,5 @@
-html,
-body {
-  height: 100%; }
-
-.page-container {
-  min-height: 100%;
-  margin-top: 70px; }
-
-.content-container {
-  padding-top: 70px; }
-
-.footer-fix {
-  height: 100px; }
-
-.footer {
-  margin-top: -60px;
-  border-top: 1px solid #ddd;
-  height: 59px;
-  line-height: 59px;
-  box-sizing: border-box; }
-  .footer p {
-    margin: 0; }
-
-#game-area {
-  width: 100%;
-  max-width: 640px;
-  max-height: 480px;
-  background-color: #000;
-  border: none; }
-
-.navbar .btn {
-  line-height: 20px;
-  padding: 15px;
-  border: none; }
-  .navbar .btn:hover {
-    text-decoration: none; }
+.navbar-brand > img {
+  display: inline-block; }
 
 #timeline {
   z-index: 1;
@@ -42,22 +8,25 @@ body {
     text-align: center;
     width: 4%;
     cursor: default;
+    border-color: #333;
     border-right-color: transparent; }
     #timeline th.even {
-      border-right-color: #ddd; }
+      border-right-color: #333; }
   #timeline td {
+    background: #000;
     text-align: center;
     vertical-align: middle;
     padding: 0;
     font-size: 0.8em;
     cursor: pointer;
+    border-color: #333;
     border-right-color: transparent; }
     #timeline td:hover {
-      background: #eeeeee; }
+      background: #333; }
     #timeline td.even {
-      border-right-color: #ddd; }
+      border-right-color: #333; }
     #timeline td.selected {
-      background: #6495ED;
+      background: #FF4700;
       color: #FFFFFF; }
 
 #nowline {

@@ -10,25 +10,30 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 
 $js = <<<JS
+$('#page-name, #page-title').each(function(){
+    $(this).attr('data-old', $(this).val());
+});
 $('#page-name').change(function(){
     var obj = $(this);
     $('input[id^="page-name_"]').each(function(){
-        if (!$(this).val().length || $(this).val() == $(this).attr('data-old')) {
+        if (!$(this).val().length || $(this).val() == obj.attr('data-old')) {
             $(this).val(obj.val()).attr('data-old', obj.val());
         }
     });
     var obj2 = $('#page-title');
-    if (!obj2.val().length || obj2.val() == obj2.attr('data-old')) {
-        obj2.val(obj.val()).attr('data-old', obj.val()).change();
+    if (!obj2.val().length || obj2.val() == obj.attr('data-old')) {
+        obj2.val(obj.val()).change();
     }
+    obj.attr('data-old', obj.val());
 });
 $('#page-title').change(function(){
     var obj = $(this);
     $('input[id^="page-title_"]').each(function(){
-        if (!$(this).val().length || $(this).val() == $(this).attr('data-old')) {
+        if (!$(this).val().length || $(this).val() == obj.attr('data-old')) {
             $(this).val(obj.val()).attr('data-old', obj.val());
         }
     });
+    obj.attr('data-old', obj.val());
 });
 JS;
 
