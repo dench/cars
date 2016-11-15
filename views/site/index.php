@@ -4,10 +4,11 @@
 
 use app\widgets\H1;
 
-$this->title = 'My Yii Application';
 ?>
 
-<?= H1::run($this->title); ?>
+<?= H1::run($this->params['page']->name); ?>
+
+<?= H1::run($this->params['page']->text); ?>
 
 <?php
 /*

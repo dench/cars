@@ -8,6 +8,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\web\View;
 
 /**
  * This is the model class for table "page".
@@ -79,6 +80,20 @@ class Page extends ActiveRecord
             'description' => Yii::t('app', 'Description'),
             'text' => Yii::t('app', 'Text'),
         ];
+    }
+
+    public static function viewPage($id)
+    {
+        Yii::$app->view->params['page'] = self::findOne($id);
+        Yii::$app->view->title = Yii::$app->view->params['page']->title;
+        Yii::$app->view->registerMetaTag([
+            'name' => 'description',
+            'content' => Yii::$app->view->params['page']->description
+        ]);
+        Yii::$app->view->registerMetaTag([
+            'name' => 'keywords',
+            'content' => Yii::$app->view->params['page']->keywords
+        ]);
     }
 
     /**

@@ -16,7 +16,9 @@ class H1
     public static function run($title = false)
     {
         if ($title) {
-            echo '<h1 class="text-xs-center">' . Html::encode($title) . '</h1>';
+            return '<h1 class="text-xs-center">' . Html::encode($title) . '</h1>';
+        } else {
+            return '';
         }
     }
 }

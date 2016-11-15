@@ -15,13 +15,14 @@ use yii\helpers\ArrayHelper;
  */
 class Language extends ActiveRecord
 {
+    private static $_all;
+
     private static $_list;
 
     private static $_suffix_list;
 
     // Переменная, для хранения текущего объекта языка
     public static $current = null;
-
     /**
      * @inheritdoc
      */
@@ -86,7 +87,7 @@ class Language extends ActiveRecord
             return static::$_list;
         }
 
-        return static::$_list = ArrayHelper::map(self::find()->orderBy('position')->asArray()->all(), 'id', 'name');
+        return static::$_list = ArrayHelper::map(self::findModels(), 'id', 'name');
     }
 
     // Получение текущего объекта языка
@@ -101,7 +102,11 @@ class Language extends ActiveRecord
     // Установка текущего объекта языка и локаль пользователя
     public static function setCurrent($id = null)
     {
-        $language = self::findOne($id);
+        if ($id) {
+            $language = self::findModel($id);
+        } else {
+            $language = null;
+        }
         self::$current = ($language === null) ? self::getDefault() : $language;
         Yii::$app->language = self::$current->id;
     }
@@ -109,6 +114,28 @@ class Language extends ActiveRecord
     // Получения объекта языка по умолчанию
     public static function getDefault()
     {
-        return self::findOne(Yii::$app->sourceLanguage);
+        return self::findModel(Yii::$app->sourceLanguage);
+    }
+
+    public static function findModel($id)
+    {
+        if (!self::$_all) {
+            self::$_all = self::findModels();
+        }
+
+        if (isset(self::$_all[$id])) {
+            return self::$_all[$id];
+        } else {
+            return null;
+        }
+    }
+
+    public static function findModels()
+    {
+        if (!self::$_all) {
+            self::$_all = self::find()->orderBy('position')->indexBy('id')->all();
+        }
+
+        return self::$_all;
     }
 }

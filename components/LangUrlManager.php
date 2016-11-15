@@ -12,7 +12,7 @@ class LangUrlManager extends UrlManager
         if (isset($params['lang_id'])) {
             // Если указан идентификатор языка, то делаем попытку найти язык в БД,
             // иначе работаем с языком по умолчанию
-            $lang = Language::findOne($params['lang_id']);
+            $lang = Language::findModel($params['lang_id']);
             if ($lang === null) {
                 $lang = Language::getDefault();
             }
