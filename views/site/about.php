@@ -4,7 +4,6 @@
 
 use app\widgets\H1;
 
-$this->title = 'About';
 ?>
 
-<?= H1::run($this->title); ?>
+<?= H1::run($this->params['page']->name); ?>

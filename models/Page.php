@@ -3,8 +3,10 @@
 namespace app\models;
 
 use app\behaviors\LanguageBehavior;
+use app\behaviors\TitleBehavior;
 use omgdef\multilingual\MultilingualQuery;
 use Yii;
+use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -45,6 +47,11 @@ class Page extends ActiveRecord
         return [
             LanguageBehavior::className(),
             TimestampBehavior::className(),
+            [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'name',
+                'ensureUnique' => true
+            ],
         ];
     }
 
@@ -54,7 +61,7 @@ class Page extends ActiveRecord
     public function rules()
     {
         return [
-            [['slug', 'name', 'title'], 'required'],
+            [['name', 'title'], 'required'],
             [['slug', 'name', 'title', 'keywords'], 'string', 'max' => 255],
             [['description', 'text'], 'string'],
             [['slug', 'name', 'title', 'keywords', 'description', 'text'], 'trim'],

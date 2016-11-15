@@ -31,7 +31,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        Page::viewPage(1);
+        Page::viewPage('index');
 
         return $this->render('index');
     }
@@ -51,16 +51,22 @@ class SiteController extends Controller
 
     public function actionAbout()
     {
+        Page::viewPage('about');
+
         return $this->render('about');
     }
 
     public function actionLeaderboards()
     {
+        Page::viewPage('leaderboards');
+
         return $this->render('leaderboards');
     }
 
     public function actionFaq()
     {
+        Page::viewPage('faq');
+
         return $this->render('faq');
     }
 }

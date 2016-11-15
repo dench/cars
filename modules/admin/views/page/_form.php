@@ -8,6 +8,31 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\Page */
 /* @var $form yii\widgets\ActiveForm */
+
+$js = <<<JS
+$('#page-name').change(function(){
+    var obj = $(this);
+    $('input[id^="page-name_"]').each(function(){
+        if (!$(this).val().length || $(this).val() == $(this).attr('data-old')) {
+            $(this).val(obj.val()).attr('data-old', obj.val());
+        }
+    });
+    var obj2 = $('#page-title');
+    if (!obj2.val().length || obj2.val() == obj2.attr('data-old')) {
+        obj2.val(obj.val()).attr('data-old', obj.val()).change();
+    }
+});
+$('#page-title').change(function(){
+    var obj = $(this);
+    $('input[id^="page-title_"]').each(function(){
+        if (!$(this).val().length || $(this).val() == $(this).attr('data-old')) {
+            $(this).val(obj.val()).attr('data-old', obj.val());
+        }
+    });
+});
+JS;
+
+$this->registerJs($js);
 ?>
 
 <div class="page-form">
@@ -31,7 +56,7 @@ use yii\widgets\ActiveForm;
                     'preset' => 'full',
                     'clientOptions' => [
                         'customConfig' => '/js/ckeditor.js',
-                        'language' => 'ru'//Yii::$app->language
+                        'language' => Yii::$app->language
                     ]
                 ]) ?>
             </div>
