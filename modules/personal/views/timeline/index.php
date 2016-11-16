@@ -10,12 +10,43 @@ $('#nowline').each(function(){
 var order = [];
 $('#timeline td').click(function() {
     var cls = 'selected';
+    var time = $(this).attr('data-time');
     if ($(this).hasClass(cls)) {
         $(this).removeClass(cls);
+        order.splice(order.indexOf(parseInt(time)),1);
     } else {
         $(this).addClass(cls);
+        order.push(parseInt(time));
     }
+    timeFromTo(order.slice());
 });
+function timeFromTo(all) {
+    all.sort(function(a,b){return a-b;});
+    var from = [];
+    var to = [];
+    var k = 1;
+    var j = 0;
+    if (all[0] != null) {
+        from[j] = all[0];
+    }
+    for (var i = 1; i < all.length; i++) {
+        if (from[j]+30*60*k != all[i]) {
+            to[j] = from[j]+30*60*k;
+            j++;
+            from[j] = all[i];
+            k = 0;
+        }
+        k++;
+    }
+    if (all[0] != null) {
+        to.push(all.pop()+30*60);
+    }
+    $('#fromto').empty();
+    for (i = 0; i < from.length; i++) {
+        $('#fromto').append($('<input>').attr('name', 'Timeline['+i+']from').attr('type', 'hidden').val(from[i]));
+        $('#fromto').append($('<input>').attr('name', 'Timeline['+i+']to').attr('type', 'hidden').val(to[i]));
+    }
+}
 JS;
 
 $this->registerJs($js);
@@ -43,10 +74,12 @@ $mktime = mktime(0, 0, 0);
             for ($j = 0; $j < 48; $j++) {
                 $t = $mktime+$day+$j*1800;
                 if ($j % 2) $class = " class=\"even\""; else $class = "";
-                echo "<td" . $class . " rel=\"" . $t . "\" title=\"" . Yii::$app->formatter->asDatetime($t) . "\">30</td>";
+                echo "<td" . $class . " data-time=\"" . $t . "\" title=\"" . Yii::$app->formatter->asDatetime($t) . "\">30</td>";
             }
             echo "</tr>";
         }
         ?>
     </table>
 </div>
+<form id="fromto" method="post">
+</form>
