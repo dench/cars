@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\admin;
+namespace app\modules\admin\models;
 
 use Yii;
 use yii\base\Model;
@@ -12,14 +12,16 @@ use app\models\Robot;
  */
 class RobotSearch extends Robot
 {
+    public $zone;
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'mqtt_id'], 'integer'],
-            [['name'], 'safe'],
+            [['id', 'mqtt_id', 'zone_id'], 'integer'],
+            [['name', 'zone'], 'safe'],
         ];
     }
 
@@ -43,6 +45,8 @@ class RobotSearch extends Robot
     {
         $query = Robot::find();
 
+        $query->joinWith(['zone']);
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -59,11 +63,13 @@ class RobotSearch extends Robot
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'mqtt_id' => $this->mqtt_id,
+            'robot.id' => $this->id,
+            'robot.zone_id' => $this->id,
+            'robot.mqtt_id' => $this->mqtt_id,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name]);
+        $query->andFilterWhere(['like', 'robot.name', $this->name]);
+        $query->andFilterWhere(['like', 'zone.name', $this->zone]);
 
         return $dataProvider;
     }

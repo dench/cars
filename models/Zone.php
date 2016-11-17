@@ -85,4 +85,17 @@ class Zone extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRobots()
+    {
+        return $this->hasMany(Robot::className(), ['zone_id' => 'id']);
+    }
+
+    public static function getList($condition = null)
+    {
+        return ArrayHelper::map(self::find()->where($condition)->asArray()->all(), 'id', 'name');
+    }
 }

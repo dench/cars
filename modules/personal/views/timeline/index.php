@@ -1,21 +1,21 @@
 <?php
-/* @var $this yii\web\View */
+/** @var $this yii\web\View */
+/** @var $from array */
+/** @var $count integer */
+
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 $js = <<<JS
-$('#nowline').each(function(){
-    var h = $(this).next().height();
-    var w = $(this).next().width();
-    $(this).height(h+2).css({marginLeft: w/2});
-});
 var order = [];
-$('#timeline td').click(function() {
+$('#timeline td.free').click(function() {
     var cls = 'selected';
     var time = $(this).attr('data-time');
     if ($(this).hasClass(cls)) {
-        $(this).removeClass(cls);
+        $(this).removeClass(cls).find('i').removeClass('fa-check-square-o').addClass('fa-square-o');
         order.splice(order.indexOf(parseInt(time)),1);
     } else {
-        $(this).addClass(cls);
+        $(this).addClass(cls).find('i').removeClass('fa-square-o').addClass('fa-check-square-o');
         order.push(parseInt(time));
     }
     timeFromTo(order.slice());
@@ -41,10 +41,15 @@ function timeFromTo(all) {
     if (all[0] != null) {
         to.push(all.pop()+30*60);
     }
-    $('#fromto').empty();
+    $('#fromto div').empty();
     for (i = 0; i < from.length; i++) {
-        $('#fromto').append($('<input>').attr('name', 'Timeline['+i+']from').attr('type', 'hidden').val(from[i]));
-        $('#fromto').append($('<input>').attr('name', 'Timeline['+i+']to').attr('type', 'hidden').val(to[i]));
+        $('#fromto div').append($('<input>').attr('name', 'Timeline['+i+'][from]').attr('type', 'hidden').val(from[i]));
+        $('#fromto div').append($('<input>').attr('name', 'Timeline['+i+'][to]').attr('type', 'hidden').val(to[i]));
+    }
+    if (from.length) {
+        $('#fromto button').prop('disabled', false);
+    } else {
+        $('#fromto button').prop('disabled', true);
     }
 }
 JS;
@@ -56,7 +61,6 @@ $mktime = mktime(0, 0, 0);
 ?>
 
 <div class="table-responsive table-timeline-wrap">
-    <div id="nowline"></div>
     <table class="table table-bordered" id="timeline">
         <tr>
             <th class="even"></th>
@@ -73,13 +77,31 @@ $mktime = mktime(0, 0, 0);
             echo "<th class=\"even\">" . Yii::$app->formatter->asDate($time+$day, 'php:l') . "</th>";
             for ($j = 0; $j < 48; $j++) {
                 $t = $mktime+$day+$j*1800;
-                if ($j % 2) $class = " class=\"even\""; else $class = "";
-                echo "<td" . $class . " data-time=\"" . $t . "\" title=\"" . Yii::$app->formatter->asDatetime($t) . "\">30</td>";
+                if ($j % 2) $class = "even"; else $class = "";
+
+                if ($t < $time) {
+                    $icon = "";
+                    $text = Yii::t('app', 'Passed');
+                } else {
+                    $icon = "square-o";
+                    $text = Yii::t('app', 'Free');
+                    if (isset($from[$t]) && $from[$t] >= $count) {
+                        $class .= " busy";
+                        $icon = "times";
+                        $text = Yii::t('app', 'Busy');
+                    } else {
+                        $class .= " free";
+                    }
+                }
+                echo "<td class=\"" . $class . "\" data-time=\"" . $t . "\" title=\"" . Yii::$app->formatter->asDatetime($t) . " (" . $text . ")\"><i class=\"fa fa-".$icon."\"></i></td>";
             }
             echo "</tr>";
         }
         ?>
     </table>
 </div>
-<form id="fromto" method="post">
-</form>
+
+<?php $form = ActiveForm::begin(['id' => 'fromto']); ?>
+    <div></div>
+    <?= Html::submitButton(Yii::t('app', 'Reserve'), ['class' => 'btn btn-primary btn-lg', 'disabled' => true]) ?>
+<?php ActiveForm::end(); ?>

@@ -2,10 +2,9 @@
 
 namespace app\modules\admin\controllers;
 
-use app\models\User;
 use Yii;
 use app\models\MqttUser;
-use app\modules\admin\MqttUserSearch;
+use app\modules\admin\models\MqttUserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

@@ -17,22 +17,21 @@
     text-align: center;
     vertical-align: middle;
     padding: 0;
-    font-size: 0.8em;
-    cursor: pointer;
     border-color: #333;
-    border-right-color: transparent; }
-    #timeline td:hover {
-      background: #333; }
+    border-right-color: transparent;
+    cursor: default; }
+    #timeline td i {
+      width: 14px; }
+    #timeline td.free:hover {
+      background: #333;
+      cursor: pointer; }
     #timeline td.even {
       border-right-color: #333; }
     #timeline td.selected {
-      background: #FF4700;
+      background: #001F00;
       color: #FFFFFF; }
-
-#nowline {
-  z-index: 0;
-  position: absolute;
-  width: 2px;
-  background: #f00; }
+    #timeline td.busy {
+      background: #310A00;
+      color: #000; }
 
 /*# sourceMappingURL=personal.css.map */

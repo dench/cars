@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Zone;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -11,6 +12,8 @@ use yii\widgets\ActiveForm;
 <?php $form = ActiveForm::begin(); ?>
 
 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+
+<?= $form->field($model, 'zone_id')->dropDownList(Zone::getList(['!=', 'status',  Zone::STATUS_DISABLED]), ['prompt' => '-']) ?>
 
 <?= $form->field($model, 'mqtt_id')->textInput() ?>
 

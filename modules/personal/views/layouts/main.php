@@ -4,6 +4,7 @@
 /* @var $content string */
 
 use app\assets\AppAsset;
+use app\assets\FontAwesomeAsset;
 use app\assets\PersonalAsset;
 use app\widgets\Lang;
 use yii\helpers\Html;
@@ -12,6 +13,7 @@ use yii\bootstrap\NavBar;
 use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
 
+FontAwesomeAsset::register($this);
 AppAsset::register($this);
 PersonalAsset::register($this);
 ?>
@@ -37,6 +39,10 @@ PersonalAsset::register($this);
             'class' => 'navbar-dark',
         ],
     ]);
+
+    $menuItems[] = '<li class="nav-item nav-personal">'
+        . Html::a(Html::img('/img/userpic.png') . Yii::$app->user->identity->username, ['/personal/default/index'])
+        . '</li>';
 
     $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Timeline'), 'url' => ['/personal/timeline/index']];
     $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Home'), 'url' => ['/site/index']];

@@ -22,26 +22,26 @@
     text-align: center;
     vertical-align: middle;
     padding: 0;
-    font-size: 0.8em;
-    cursor: pointer;
     border-color: #333;
     border-right-color: transparent;
-    &:hover {
+    cursor: default;
+    i {
+      width: 14px;
+    }
+    &.free:hover {
       background: #333;
+      cursor: pointer;
     }
     &.even {
       border-right-color: #333;
     }
     &.selected {
-      background: #FF4700;
+      background: #001F00;
       color: #FFFFFF;
     }
+    &.busy {
+      background: #310A00;
+      color: #000;
+    }
   }
-}
-
-#nowline {
-  z-index: 0;
-  position: absolute;
-  width: 2px;
-  background: #f00;
 }

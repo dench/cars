@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use app\behaviors\CreatorBehavior;
+use yii\db\ActiveRecord;
 use yii\validators\DateValidator;
 
 /**
@@ -17,7 +19,7 @@ use yii\validators\DateValidator;
  * @property User $user
  * @property Robot $robot
  */
-class Timeline extends \yii\db\ActiveRecord
+class Timeline extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -30,10 +32,20 @@ class Timeline extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public function behaviors()
+    {
+        return [
+            CreatorBehavior::className(),
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
-            [['user_id', 'robot_id', 'from', 'to', 'fromFormat', 'toFormat'], 'required'],
+            [['from', 'to', 'fromFormat', 'toFormat'], 'required'],
             [['user_id', 'robot_id', 'from', 'to'], 'integer'],
             [['fromFormat', 'toFormat'], 'date', 'type' => DateValidator::TYPE_DATETIME],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
@@ -89,5 +101,39 @@ class Timeline extends \yii\db\ActiveRecord
     public function getRobot()
     {
         return $this->hasOne(Robot::className(), ['id' => 'robot_id']);
+    }
+
+    public static function reservedTime($to)
+    {
+        $temp = self::find()->where(['>=', 'to', $to])->asArray()->all();
+
+        $items = [];
+
+        foreach ($temp as $t) {
+            $items[] = [
+                $t['from'],
+                $t['to']
+            ];
+        }
+
+        return $items;
+    }
+
+    public static function reservedCount($to)
+    {
+        $models = self::reservedTime($to);
+
+        $items = [];
+
+        foreach ($models as $m) {
+            $f = $m[0];
+            $t = $m[1];
+            $n = ceil(($t-$f)/1800);
+            for ($i = 0; $i < $n; $i++) {
+                @$items[$f+1800*$i]++;
+            }
+        }
+
+        return $items;
     }
 }

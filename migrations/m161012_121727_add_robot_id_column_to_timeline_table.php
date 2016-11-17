@@ -12,7 +12,7 @@ class m161012_121727_add_robot_id_column_to_timeline_table extends Migration
      */
     public function up()
     {
-        $this->addColumn('timeline', 'robot_id', $this->integer()->notNull());
+        $this->addColumn('timeline', 'robot_id', $this->integer());
 
         $this->addForeignKey('fk-timeline-robot_id', 'timeline', 'robot_id', 'robot', 'id', 'CASCADE');
     }

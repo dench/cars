@@ -22,6 +22,7 @@ use yii\web\IdentityInterface;
  * @property integer $updated_at
  * @property integer $mqtt_id
  * @property string $energy
+ * @property string $timezone
  *
  * @property string $password
  *
@@ -77,6 +78,10 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'in', 'range' => [self::STATUS_ENABLED, self::STATUS_DISABLED]],
 
             [['mqtt_id'], 'exist', 'skipOnError' => true, 'targetClass' => MqttUser::className(), 'targetAttribute' => ['mqtt_id' => 'id']],
+
+            ['timezone', 'filter', 'filter' => function($value) {
+                return in_array($value, timezone_identifiers_list()) ? $value : 'UTC';
+            }],
         ];
     }
 
@@ -112,7 +117,8 @@ class User extends ActiveRecord implements IdentityInterface
             'created_at' => Yii::t('app', 'Created'),
             'updated_at' => Yii::t('app', 'Updated'),
             'password' => Yii::t('app', 'Password'),
-            'energy' => 'Energy',
+            'energy' => Yii::t('app', 'Energy'),
+            'timezone' => Yii::t('app', 'Timezone'),
         ];
     }
 

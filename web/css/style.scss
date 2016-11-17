@@ -73,6 +73,21 @@ body {
       display: none;
     }
   }
+  .nav-personal {
+    a {
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      &:hover {
+        color: rgba(255, 255, 255, 0.8);
+      }
+    }
+    img {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+  }
   &-dark {
     background: #000000;
   }

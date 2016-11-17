@@ -1,7 +1,6 @@
 <?php
 
 use app\models\User;
-use app\models\Zone;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -21,6 +20,8 @@ use yii\widgets\ActiveForm;
 <?= $form->field($model, 'status')->dropDownList(User::statusList()) ?>
 
 <?= $form->field($model, 'energy')->textInput(['maxlength' => true]) ?>
+
+<?= $form->field($model, 'timezone')->dropDownList(array_combine(timezone_identifiers_list(), timezone_identifiers_list())) ?>
 
 <?= $form->field($model, 'mqtt_id')->textInput(['maxlength' => true]) ?>
 

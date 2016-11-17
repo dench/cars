@@ -11,6 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'language' => 'en',
     'sourceLanguage' => 'en',
+    'timezone' => 'Europe/Kiev',
     'bootstrap' => ['log'],
     'modules' => [
         'admin' => [
@@ -40,6 +41,10 @@ return [
                     'class' => 'yii\i18n\PhpMessageSource',
                 ],
             ],
+        ],
+        'formatter' => [
+            'defaultTimeZone' => 'UTC',
+            'datetimeFormat' => 'short',
         ],
     ],
     'params' => $params,

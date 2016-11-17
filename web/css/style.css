@@ -52,6 +52,16 @@ body {
     text-transform: uppercase; }
     .navbar .nav-link i {
       display: none; }
+  .navbar .nav-personal a {
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none; }
+    .navbar .nav-personal a:hover {
+      color: rgba(255, 255, 255, 0.8); }
+  .navbar .nav-personal img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    margin-right: 10px; }
   .navbar-dark {
     background: #000000; }
   .navbar-brand {
