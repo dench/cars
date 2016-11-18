@@ -29,10 +29,10 @@
       width: 14px;
     }
     &.free {
-      background: #001F00;
+      background: #020;
     }
-    &.free:not(.me):hover {
-      background: #333;
+    &.free:not(.me):not(.selected):hover {
+      background: #030;
       cursor: pointer;
     }
     &.even {
@@ -43,7 +43,7 @@
       color: #FFFFFF;
     }
     &.busy {
-      background: #310A00;
+      background: #330000;
       color: #000;
     }
     &.me {

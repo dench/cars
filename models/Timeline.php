@@ -126,7 +126,7 @@ class Timeline extends ActiveRecord
     {
         if (!isset($params['to'])) $params['to'] = time();
 
-        $models = self::reservedFromTo($params['to']);
+        $models = self::reservedFromTo($params);
 
         $items = [];
 

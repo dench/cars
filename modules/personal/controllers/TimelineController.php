@@ -13,19 +13,28 @@ class TimelineController extends \yii\web\Controller
     public function actionIndex()
     {
         if (isset($_POST['Timeline'])) {
-            $models = array_fill(0, count($_POST['Timeline']), new Timeline());
+            $models = [];
+            foreach ($_POST['Timeline'] as $i) {
+                $models[] = new Timeline();
+            }
             if (Model::loadMultiple($models, Yii::$app->request->post()) && Model::validateMultiple($models)) {
                 foreach ($models as $model) {
                     /** @var $model Timeline */
-                    $model->save();
+                    if ($to = Timeline::findOne(['to' => $model->from, 'user_id' => Yii::$app->user->identity->getId()])) {
+                        $model->from = $to->from;
+                        $to->delete();
+                    }
+                    if ($from = Timeline::findOne(['from' => $model->to, 'user_id' => Yii::$app->user->identity->getId()])) {
+                        $model->to = $from->to;
+                        $from->delete();
+                    }
+                    $model->save(false);
                 }
                 return $this->redirect(['/personal/timeline']);
             }
         }
 
-        return $this->render('index', [
-            'count' => Robot::countRobots(['zone_id' => 1])
-        ]);
+        return $this->render('index');
     }
 
     public function actionReserved()
@@ -33,7 +42,7 @@ class TimelineController extends \yii\web\Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $data['busy'] = Timeline::reserved();
-        $data['me'] = Timeline::reserved(['user_id' => 1]);
+        $data['me'] = Timeline::reserved(['user_id' => Yii::$app->user->identity->getId()]);
         $data['passed'] = Timeline::passed();
 
         return $data;

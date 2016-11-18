@@ -33,7 +33,7 @@ PersonalAsset::register($this);
 <div class="page-container">
     <?php
     NavBar::begin([
-        'brandLabel' => Html::img('/img/rad_icon.png', ['height' => '100%']) . '</a><a href="'.Url::to(['/personal/default/index']).'" class="navbar-brand">' . Yii::t('app', 'Personal'),
+        'brandLabel' => Html::img('/img/rad_icon.png', ['height' => '100%']) . '</a><a href="'.Url::to(['default/index']).'" class="navbar-brand">' . Yii::t('app', 'Personal'),
         'brandUrl' => ['/'],
         'options' => [
             'class' => 'navbar-dark',
@@ -41,11 +41,11 @@ PersonalAsset::register($this);
     ]);
 
     $menuItems[] = '<li class="nav-item nav-personal">'
-        . Html::a(Html::img('/img/userpic.png') . Yii::$app->user->identity->username, ['/personal/default/index'])
+        . Html::a(Html::img('/img/userpic.png') . Yii::$app->user->identity->username, ['default/index'])
         . '</li>';
 
-    $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Timeline'), 'url' => ['/personal/timeline/index']];
-    $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Home'), 'url' => ['/site/index']];
+    $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Timeline'), 'url' => ['timeline/index']];
+    $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Game'), 'url' => ['/game/index']];
     $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Control'), 'url' => ['/admin/default/index']];
 
     $menuItems[] = '<li class="nav-item">'

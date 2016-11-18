@@ -59,14 +59,14 @@ FontAwesomeAsset::register($this);
             . Html::a(Html::img('/img/userpic.png') . Yii::$app->user->identity->username, ['/personal/default/index'])
             . '</li>';
         $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Control'), 'url' => ['/admin/default/index']];
-        $menuItems[] = '<li class="nav-item">'
+        /*$menuItems[] = '<li class="nav-item">'
             . Html::beginForm(['/user/logout'], 'post')
             . Html::submitButton(
                 '<i class="fa fa-sign-out"></i> ' . Yii::t('app', 'Log out'),
                 ['class' => 'nav-link']
             )
             . Html::endForm()
-            . '</li>';
+            . '</li>';*/
     }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav pull-sm-right'],
