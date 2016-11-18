@@ -6,6 +6,7 @@ use app\models\Robot;
 use app\models\Timeline;
 use Yii;
 use yii\base\Model;
+use yii\web\Response;
 
 class TimelineController extends \yii\web\Controller
 {
@@ -22,25 +23,20 @@ class TimelineController extends \yii\web\Controller
             }
         }
 
-        /*$time = time();
-        $mktime = mktime(0, 0, 0);
-        $models = Timeline::reserved($time);
-        for ($i = 0; $i < 7; $i++) {
-            $day = $i*3600*24;
-            for ($j = 0; $j < 48; $j++) {
-                $t = $mktime+$day+$j*1800;
-            }
-        }*/
-
-        $count = Robot::countRobots(['zone_id' => 1]);
-
-        $time = time();
-        $from = Timeline::reservedCount($time);
-
         return $this->render('index', [
-            'from' => $from,
-            'count' => $count
+            'count' => Robot::countRobots(['zone_id' => 1])
         ]);
+    }
+
+    public function actionReserved()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $data['busy'] = Timeline::reserved();
+        $data['me'] = Timeline::reserved(['user_id' => 1]);
+        $data['passed'] = Timeline::passed();
+
+        return $data;
     }
 
 }

@@ -1,14 +1,17 @@
 <?php
 /** @var $this yii\web\View */
-/** @var $from array */
 /** @var $count integer */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
+
+$url = Url::to(['reserved']);
 
 $js = <<<JS
 var order = [];
-$('#timeline td.free').click(function() {
+$('#timeline').find('td').click(function() {
+    if (!$(this).hasClass('free') || $(this).hasClass('me')) return;
     var cls = 'selected';
     var time = $(this).attr('data-time');
     if ($(this).hasClass(cls)) {
@@ -20,6 +23,27 @@ $('#timeline td.free').click(function() {
     }
     timeFromTo(order.slice());
 });
+$('[data-toggle="tooltip"]').tooltip();
+timelineUp();
+setInterval(function() {
+    timelineUp();
+}, 5000);
+
+function timelineUp() {
+    $.post('{$url}', function(data){
+        $('#timeline td').removeClass('passed').removeClass('busy').removeClass('me').addClass('free');
+        for (var key in data.busy) {
+            $('td[data-time="'+key+'"]').removeClass('free').addClass('busy');
+        }
+        for (key in data.passed) {
+            $('td[data-time="'+key+'"]').removeClass('free').addClass('passed');
+        }
+        for (key in data.me) {
+            $('td[data-time="'+key+'"]').addClass('me');
+        }
+    });
+}
+
 function timeFromTo(all) {
     all.sort(function(a,b){return a-b;});
     var from = [];
@@ -78,22 +102,7 @@ $mktime = mktime(0, 0, 0);
             for ($j = 0; $j < 48; $j++) {
                 $t = $mktime+$day+$j*1800;
                 if ($j % 2) $class = "even"; else $class = "";
-
-                if ($t < $time) {
-                    $icon = "";
-                    $text = Yii::t('app', 'Passed');
-                } else {
-                    $icon = "square-o";
-                    $text = Yii::t('app', 'Free');
-                    if (isset($from[$t]) && $from[$t] >= $count) {
-                        $class .= " busy";
-                        $icon = "times";
-                        $text = Yii::t('app', 'Busy');
-                    } else {
-                        $class .= " free";
-                    }
-                }
-                echo "<td class=\"" . $class . "\" data-time=\"" . $t . "\" title=\"" . Yii::$app->formatter->asDatetime($t) . " (" . $text . ")\"><i class=\"fa fa-".$icon."\"></i></td>";
+                echo "<td class=\"" . $class . "\" data-toggle=\"tooltip\" data-placement=\"top\" data-time=\"" . $t . "\" title=\"" . Yii::$app->formatter->asDatetime($t) . "\"></td>";
             }
             echo "</tr>";
         }

@@ -103,13 +103,13 @@ class Timeline extends ActiveRecord
         return $this->hasOne(Robot::className(), ['id' => 'robot_id']);
     }
 
-    public static function reservedTime($to)
+    public static function reservedFromTo($params = null)
     {
-        $temp = self::find()->where(['>=', 'to', $to])->asArray()->all();
+        $query = self::find()->andFilterWhere(['>=', 'to', @$params['to']])->andFilterWhere(['user_id' => @$params['user_id']])->asArray()->all();
 
         $items = [];
 
-        foreach ($temp as $t) {
+        foreach ($query as $t) {
             $items[] = [
                 $t['from'],
                 $t['to']
@@ -119,9 +119,14 @@ class Timeline extends ActiveRecord
         return $items;
     }
 
-    public static function reservedCount($to)
+    /**
+     * Ячейки времени которые уже зарезервированы
+     */
+    public static function reserved($params = null)
     {
-        $models = self::reservedTime($to);
+        if (!isset($params['to'])) $params['to'] = time();
+
+        $models = self::reservedFromTo($params['to']);
 
         $items = [];
 
@@ -134,6 +139,31 @@ class Timeline extends ActiveRecord
             }
         }
 
+        if (isset($params['count'])) {
+            foreach ($items as $k => $v) {
+                if ($v >= $params['count']) {
+                    unset($items[$k]);
+                }
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * Ячейки времени которые нельзя выбрать, потому что время уже прошло
+     */
+    public static function passed()
+    {
+        $items = [];
+        $time = time();
+        $mktime = mktime(0, 0, 0);
+        for ($j = 0; $j < 48; $j++) {
+            $t = $mktime + $j * 1800;
+            if ($t < $time) {
+                $items[$t] = $t;
+            }
+        }
         return $items;
     }
 }

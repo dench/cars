@@ -23,12 +23,15 @@
     vertical-align: middle;
     padding: 0;
     border-color: #333;
-    border-right-color: transparent;
+    border-right-color: #222;
     cursor: default;
     i {
       width: 14px;
     }
-    &.free:hover {
+    &.free {
+      background: #001F00;
+    }
+    &.free:not(.me):hover {
       background: #333;
       cursor: pointer;
     }
@@ -36,12 +39,24 @@
       border-right-color: #333;
     }
     &.selected {
-      background: #001F00;
+      background: green;
       color: #FFFFFF;
     }
     &.busy {
       background: #310A00;
       color: #000;
     }
+    &.me {
+      background: #0275d8;
+      color: #000;
+    }
   }
+}
+
+.tooltip-inner {
+  background-color: #333;
+}
+.tooltip.tooltip-top .tooltip-arrow,
+.tooltip.bs-tether-element-attached-bottom .tooltip-arrow {
+  border-top-color: #333;
 }
