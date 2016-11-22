@@ -273,4 +273,19 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return $this->hasMany(Zone::className(), ['user_id' => 'id']);
     }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                $mqtt = new MqttUser();
+                $mqtt->pw = exec("np -p 123456");
+                if ($mqtt->save()) {
+                    $this->mqtt_id = $mqtt->id;
+                }
+            }
+        }
+
+        return true;
+    }
 }

@@ -11,7 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'language' => 'en',
     'sourceLanguage' => 'en',
-    'timezone' => 'Europe/Kiev',
+    'timeZone' => 'Europe/Kiev',
     'bootstrap' => ['log'],
     'modules' => [
         'admin' => [

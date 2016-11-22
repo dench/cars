@@ -15,23 +15,22 @@ class TimelineController extends \yii\web\Controller
         if (isset($_POST['Timeline'])) {
             $models = [];
             foreach ($_POST['Timeline'] as $i) {
-                $models[] = new Timeline();
+                $model = new Timeline();
+                $model->scenario = Timeline::SCENARIO_TIMELINE;
+                $models[] = $model;
             }
             if (Model::loadMultiple($models, Yii::$app->request->post()) && Model::validateMultiple($models)) {
                 foreach ($models as $model) {
-                    /** @var $model Timeline */
-                    if ($to = Timeline::findOne(['to' => $model->from, 'user_id' => Yii::$app->user->identity->getId()])) {
-                        $model->from = $to->from;
-                        $to->delete();
-                    }
-                    if ($from = Timeline::findOne(['from' => $model->to, 'user_id' => Yii::$app->user->identity->getId()])) {
-                        $model->to = $from->to;
-                        $from->delete();
-                    }
                     $model->save(false);
                 }
                 return $this->redirect(['/personal/timeline']);
             }
+        }
+
+        $temp = Timeline::reserved();
+
+        foreach ($temp as $k => $v) {
+            //echo Yii::$app->formatter->asDatetime($k)."<br>";
         }
 
         return $this->render('index');
@@ -42,7 +41,7 @@ class TimelineController extends \yii\web\Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $data['busy'] = Timeline::reserved();
-        $data['me'] = Timeline::reserved(['user_id' => Yii::$app->user->identity->getId()]);
+        $data['me'] = Timeline::reserved(['user_id' => Yii::$app->user->id]);
         $data['passed'] = Timeline::passed();
 
         return $data;

@@ -32,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'mqtt_id',
                 'headerOptions' => ['width' => '70'],
             ],
+            'client.user.username',
             'topic',
             [
                 'class' => SetColumn::className(),

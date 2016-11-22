@@ -62,6 +62,8 @@ class TimelineController extends Controller
     {
         $model = new Timeline();
 
+        $model->scenario = Timeline::SCENARIO_ADMIN;
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['/admin/timeline']);
         }
@@ -80,6 +82,8 @@ class TimelineController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+
+        $model->scenario = Timeline::SCENARIO_ADMIN;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['/admin/timeline']);

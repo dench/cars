@@ -3,7 +3,6 @@
 namespace app\models;
 
 use Yii;
-use app\behaviors\CreatorBehavior;
 use yii\db\ActiveRecord;
 use yii\validators\DateValidator;
 
@@ -21,6 +20,9 @@ use yii\validators\DateValidator;
  */
 class Timeline extends ActiveRecord
 {
+    const SCENARIO_ADMIN = 'admin';
+    const SCENARIO_TIMELINE = 'register';
+
     /**
      * @inheritdoc
      */
@@ -32,25 +34,26 @@ class Timeline extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
-        return [
-            CreatorBehavior::className(),
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
-            [['from', 'to', 'fromFormat', 'toFormat'], 'required'],
-            [['user_id', 'robot_id', 'from', 'to'], 'integer'],
-            [['fromFormat', 'toFormat'], 'date', 'type' => DateValidator::TYPE_DATETIME],
+            [['from', 'to'], 'required'],
+            [['user_id', 'robot_id'], 'integer'],
+            [['from', 'to'], 'integer', 'on' => self::SCENARIO_TIMELINE],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['robot_id'], 'exist', 'skipOnError' => true, 'targetClass' => Robot::className(), 'targetAttribute' => ['robot_id' => 'id']],
+            ['from', 'datetime', 'type' => DateValidator::TYPE_DATETIME, 'timestampAttribute' => 'from', 'on' => self::SCENARIO_ADMIN],
+            ['to', 'datetime', 'type' => DateValidator::TYPE_DATETIME, 'timestampAttribute' => 'to', 'on' => self::SCENARIO_ADMIN],
+            ['to', 'compare', 'compareAttribute' => 'from', 'operator' => '>'],
         ];
+    }
+
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_ADMIN] = ['user_id', 'robot_id', 'from', 'to'];
+        $scenarios[self::SCENARIO_TIMELINE] = ['from', 'to'];
+        return $scenarios;
     }
 
     /**
@@ -65,26 +68,6 @@ class Timeline extends ActiveRecord
             'from' => Yii::t('app', 'From'),
             'to' => Yii::t('app', 'To'),
         ];
-    }
-
-    public function getFromFormat()
-    {
-        return Yii::$app->formatter->asDatetime($this->from ?? time());
-    }
-
-    public function setFromFormat($text)
-    {
-        $this->from = Yii::$app->formatter->asTimestamp($text);
-    }
-
-    public function getToFormat()
-    {
-        return Yii::$app->formatter->asDatetime($this->to ?? time());
-    }
-
-    public function setToFormat($text)
-    {
-        $this->to = Yii::$app->formatter->asTimestamp($text);
     }
 
     /**
@@ -105,7 +88,11 @@ class Timeline extends ActiveRecord
 
     public static function reservedFromTo($params = null)
     {
-        $query = self::find()->andFilterWhere(['>=', 'to', @$params['to']])->andFilterWhere(['user_id' => @$params['user_id']])->asArray()->all();
+        $query = self::find()
+            ->andFilterWhere(['<', 'to', @$params['to']])
+            ->andFilterWhere(['>=', 'from', @$params['from']])
+            ->andFilterWhere(['user_id' => @$params['user_id']])
+            ->asArray()->all();
 
         $items = [];
 
@@ -124,7 +111,13 @@ class Timeline extends ActiveRecord
      */
     public static function reserved($params = null)
     {
-        if (!isset($params['to'])) $params['to'] = time();
+        if (empty($params['from'])) {
+            $params['from'] = time();
+        }
+
+        if (empty($params['to'])) {
+            $params['to'] = time()+3600*24*7;
+        }
 
         $models = self::reservedFromTo($params);
 
@@ -133,6 +126,20 @@ class Timeline extends ActiveRecord
         foreach ($models as $m) {
             $f = $m[0];
             $t = $m[1];
+            if (date('i', $f) != 0 && date('i', $f) != 30) {
+                if ($f < 30) {
+                    $f = $f - abs(0 - date('i', $f))*60;
+                } else {
+                    $f = $f - abs(30 - date('i', $f))*60;
+                }
+            }
+            if (date('i', $t) != 0 && date('i', $t) != 30) {
+                if ($t < 30) {
+                    $t = $t + abs(30 - date('i', $t))*60;
+                } else {
+                    $t = $t + abs(0 - date('i', $t))*60;
+                }
+            }
             $n = ceil(($t-$f)/1800);
             for ($i = 0; $i < $n; $i++) {
                 @$items[$f+1800*$i]++;
@@ -165,5 +172,23 @@ class Timeline extends ActiveRecord
             }
         }
         return $items;
+    }
+
+    public function beforeSave($insert)
+    {
+        if (empty($this->user_id)) {
+            $this->user_id = Yii::$app->user->id;
+        }
+        if ($to = self::findOne(['to' => $this->from, 'user_id' => $this->user_id])) {
+            $this->from = $to->from;
+            $to->delete();
+        }
+
+        if ($from = self::findOne(['from' => $this->to, 'user_id' => $this->user_id])) {
+            $this->to = $from->to;
+            $from->delete();
+        }
+
+        return parent::beforeSave($insert);
     }
 }

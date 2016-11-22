@@ -10,10 +10,6 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<?php
-
-?>
-
 <?php $form = ActiveForm::begin(); ?>
 
 <?= $form->field($model, 'mqtt_id')->textInput(['maxlength' => true]) ?>

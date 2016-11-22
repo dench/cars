@@ -23,7 +23,8 @@
         "bower-asset/almasaeed2010/adminlte": "*",
         "2amigos/yii2-ckeditor-widget": "~1.0",
         "bower-asset/fortawesome/font-awesome": "*",
-        "omgdef/yii2-multilingual-behavior": "*"
+        "omgdef/yii2-multilingual-behavior": "*",
+        "kartik-v/yii2-widget-datepicker": "@dev"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "*",

@@ -5,7 +5,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\modules\admin\MqttUserSearch */
+/* @var $searchModel app\modules\admin\models\MqttUserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Mqtt Users');
@@ -29,10 +29,10 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => Yii::t('app', 'Name'),
                 'value' => function ($model) {
-                    if (empty($model->user->username)) {
-                        return  $model->robot->name;
-                    } else {
+                    if (empty($model->robot->id)) {
                         return  $model->user->username;
+                    } else {
+                        return  $model->robot->name;
                     }
                 }
             ],

@@ -55,10 +55,11 @@ FontAwesomeAsset::register($this);
         $menuItems[] = ['label' => '<i class="fa fa-sign-in"></i> ' . Yii::t('app', 'Log in'), 'url' => ['/user/login']];
         $menuItems[] = ['label' => '<i class="fa fa-user"></i> ' . Yii::t('app', 'Sign up'), 'url' => ['/user/signup']];
     } else {
-        $menuItems[] = '<li class="nav-item nav-personal">'
+        $menuItems[] = '<li class="nav-personal nav-item">'
             . Html::a(Html::img('/img/userpic.png') . Yii::$app->user->identity->username, ['/personal/default/index'])
             . '</li>';
-        $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Control'), 'url' => ['/admin/default/index']];
+        $menuItems[] = ['label' => '<i class="fa fa-bolt"></i> ' . Yii::$app->user->identity->energy, 'url' => ['/personal/default/index'], 'options' => ['class' => 'nav-energy']];
+        $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Control'),'url' => ['/admin/default/index']];
         /*$menuItems[] = '<li class="nav-item">'
             . Html::beginForm(['/user/logout'], 'post')
             . Html::submitButton(

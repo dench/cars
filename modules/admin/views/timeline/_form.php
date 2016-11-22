@@ -14,9 +14,9 @@ use yii\widgets\ActiveForm;
 
 <?= $form->field($model, 'robot_id')->textInput() ?>
 
-<?= $form->field($model, 'fromFormat')->textInput() ?>
+<?= $form->field($model, 'from')->textInput(['value' => Yii::$app->formatter->asDatetime($model->from ?? (time() + abs(30 - date('i', time()))*60))]) ?>
 
-<?= $form->field($model, 'toFormat')->textInput() ?>
+<?= $form->field($model, 'to')->textInput(['value' => Yii::$app->formatter->asDatetime($model->to ?? (time() + abs(30 - date('i', time()))*60))]) ?>
 
 <div class="form-group">
     <?= Html::submitButton(!$model->user_id ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => !$model->user_id ? 'btn btn-success' : 'btn btn-primary']) ?>

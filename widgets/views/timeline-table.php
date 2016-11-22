@@ -77,7 +77,7 @@ function timelineUp() {
         var temp;
         for (var key in data.busy) {
             obj = $('td[data-time="'+key+'"]');
-            temp = obj.attr('data-original-title').split('<br>');
+            temp = (obj.attr('data-original-title')+'<br>').split('<br>');
             if (data.busy[key] >= {$count}) {
                 obj.removeClass('free').addClass('busy').attr('data-original-title', temp[0]+'<br>(All reserved)');
             } else {
@@ -86,13 +86,15 @@ function timelineUp() {
         }
         for (key in data.passed) {
             obj = $('td[data-time="'+key+'"]');
-            temp = obj.attr('data-original-title').split('<br>');
+            temp = (obj.attr('data-original-title')+'<br>').split('<br>');
             obj.removeClass('free').addClass('passed').attr('data-original-title', temp[0]+'<br>(Passed)');
         }
         for (key in data.me) {
             obj = $('td[data-time="'+key+'"]');
-            temp = obj.attr('data-original-title').split('<br>');
-            obj.addClass('me').attr('data-original-title', temp[0]+'<br>(Reserved for you)');
+            temp = (obj.attr('data-original-title')+'<br>').split('<br>');
+            if (!obj.hasClass('passed')) {
+                obj.addClass('me').attr('data-original-title', temp[0]+'<br>(Reserved for you)');
+            }
         }
     });
 }
