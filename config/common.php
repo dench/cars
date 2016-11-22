@@ -17,9 +17,6 @@ return [
         'admin' => [
             'class' => 'app\modules\admin\Module',
         ],
-        'personal' => [
-            'class' => 'app\modules\personal\Module',
-        ],
     ],
     'components' => [
         'db' => [

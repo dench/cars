@@ -4,6 +4,7 @@
 /* @var $content string */
 
 use app\assets\FontAwesomeAsset;
+use app\assets\PersonalAsset;
 use app\widgets\Lang;
 use yii\bootstrap\Carousel;
 use yii\helpers\Html;
@@ -14,6 +15,7 @@ use app\assets\AppAsset;
 
 AppAsset::register($this);
 FontAwesomeAsset::register($this);
+PersonalAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -56,18 +58,20 @@ FontAwesomeAsset::register($this);
         $menuItems[] = ['label' => '<i class="fa fa-user"></i> ' . Yii::t('app', 'Sign up'), 'url' => ['/user/signup']];
     } else {
         $menuItems[] = '<li class="nav-personal nav-item">'
-            . Html::a(Html::img('/img/userpic.png') . Yii::$app->user->identity->username, ['/personal/default/index'])
+            . Html::a(Html::img('/img/userpic.png') . Yii::$app->user->identity->username, ['/timeline/index'])
             . '</li>';
-        $menuItems[] = ['label' => '<i class="fa fa-bolt"></i> ' . Yii::$app->user->identity->energy, 'url' => ['/personal/default/index'], 'options' => ['class' => 'nav-energy']];
+        $menuItems[] = ['label' => '<i class="fa fa-bolt"></i> ' . Yii::$app->user->identity->energy, 'url' => ['/timeline/index'], 'options' => ['class' => 'nav-energy']];
+        $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Timeline'), 'url' => ['/timeline/index']];
+        $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Game'), 'url' => ['/game/index']];
         $menuItems[] = ['label' => '<i class="fa fa-cogs"></i> ' . Yii::t('app', 'Control'),'url' => ['/admin/default/index']];
-        /*$menuItems[] = '<li class="nav-item">'
+        $menuItems[] = '<li class="nav-item">'
             . Html::beginForm(['/user/logout'], 'post')
             . Html::submitButton(
                 '<i class="fa fa-sign-out"></i> ' . Yii::t('app', 'Log out'),
                 ['class' => 'nav-link']
             )
             . Html::endForm()
-            . '</li>';*/
+            . '</li>';
     }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav pull-sm-right'],

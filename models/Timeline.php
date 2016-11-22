@@ -14,9 +14,11 @@ use yii\validators\DateValidator;
  * @property integer $robot_id
  * @property integer $from
  * @property integer $to
+ * @property integer $zone_id
  *
  * @property User $user
  * @property Robot $robot
+ * @property Zone $zone
  */
 class Timeline extends ActiveRecord
 {
@@ -37,22 +39,24 @@ class Timeline extends ActiveRecord
     public function rules()
     {
         return [
-            [['from', 'to'], 'required'],
+            [['from', 'to', 'zone_id'], 'required'],
             [['user_id', 'robot_id'], 'integer'],
             [['from', 'to'], 'integer', 'on' => self::SCENARIO_TIMELINE],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['robot_id'], 'exist', 'skipOnError' => true, 'targetClass' => Robot::className(), 'targetAttribute' => ['robot_id' => 'id']],
+            [['zone_id'], 'exist', 'skipOnError' => true, 'targetClass' => Zone::className(), 'targetAttribute' => ['zone_id' => 'id']],
             ['from', 'datetime', 'type' => DateValidator::TYPE_DATETIME, 'timestampAttribute' => 'from', 'on' => self::SCENARIO_ADMIN],
             ['to', 'datetime', 'type' => DateValidator::TYPE_DATETIME, 'timestampAttribute' => 'to', 'on' => self::SCENARIO_ADMIN],
             ['to', 'compare', 'compareAttribute' => 'from', 'operator' => '>'],
+            [['from', 'to'], 'validateReserved'],
         ];
     }
 
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_ADMIN] = ['user_id', 'robot_id', 'from', 'to'];
-        $scenarios[self::SCENARIO_TIMELINE] = ['from', 'to'];
+        $scenarios[self::SCENARIO_ADMIN] = ['user_id', 'robot_id', 'from', 'to', 'zone_id'];
+        $scenarios[self::SCENARIO_TIMELINE] = ['from', 'to', 'zone_id'];
         return $scenarios;
     }
 
@@ -84,6 +88,41 @@ class Timeline extends ActiveRecord
     public function getRobot()
     {
         return $this->hasOne(Robot::className(), ['id' => 'robot_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getZone()
+    {
+        return $this->hasOne(Zone::className(), ['id' => 'zone_id']);
+    }
+
+    public function validateReserved($attribute, $params)
+    {
+        $count = Robot::countRobots(['zone_id' => $this->zone_id]);
+
+        $query = self::find()->where(['and', ['!=', '']]);
+
+        /*if (self::find()
+            ->andWhere(['<', 'from', $this->$attribute])->andWhere(['>', 'to', $this->$attribute])
+            ->andFilterWhere(['!=', 'id', $this->id])
+            ->count() +
+            self::find()
+                ->andWhere(['>', 'from', $this->from])->andWhere(['<', 'to', $this->to])
+                ->andFilterWhere(['!=', 'id', $this->id])
+                ->count() >= $count) {
+            $this->addError($attribute, Yii::t('app', 'Time has been reserved by somebody.'));
+        } elseif (self::find()
+            ->andWhere(['<', 'from', $this->$attribute])->andWhere(['>', 'to', $this->$attribute])
+            ->andWhere(['user_id' => $this->user_id])
+            ->count() +
+            self::find()
+                ->andWhere(['>', 'from', $this->from])->andWhere(['<', 'to', $this->to])
+                ->andWhere(['user_id' => $this->user_id])
+                ->count()) {
+            $this->addError($attribute, Yii::t('app', 'Time has been reserved for you.'));
+        }*/
     }
 
     public static function reservedFromTo($params = null)
@@ -126,19 +165,13 @@ class Timeline extends ActiveRecord
         foreach ($models as $m) {
             $f = $m[0];
             $t = $m[1];
-            if (date('i', $f) != 0 && date('i', $f) != 30) {
-                if ($f < 30) {
-                    $f = $f - abs(0 - date('i', $f))*60;
-                } else {
-                    $f = $f - abs(30 - date('i', $f))*60;
-                }
+            $fi = date('i', $f);
+            $ti = date('i', $f);
+            if ($fi != 0 && $fi != 30) {
+                $f -= abs(($fi < 30 ? 0 : 30) - $fi)*60;
             }
-            if (date('i', $t) != 0 && date('i', $t) != 30) {
-                if ($t < 30) {
-                    $t = $t + abs(30 - date('i', $t))*60;
-                } else {
-                    $t = $t + abs(0 - date('i', $t))*60;
-                }
+            if ($ti != 0 && $ti != 30) {
+                $t += abs(($ti < 30 ? 30 : 0) - $ti)*60;
             }
             $n = ceil(($t-$f)/1800);
             for ($i = 0; $i < $n; $i++) {
@@ -174,11 +207,18 @@ class Timeline extends ActiveRecord
         return $items;
     }
 
-    public function beforeSave($insert)
+    public function beforeValidate()
     {
         if (empty($this->user_id)) {
             $this->user_id = Yii::$app->user->id;
         }
+
+        return parent::beforeValidate();
+    }
+
+    public function beforeSave($insert)
+    {
+        //die();
         if ($to = self::findOne(['to' => $this->from, 'user_id' => $this->user_id])) {
             $this->from = $to->from;
             $to->delete();

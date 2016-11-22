@@ -13,10 +13,12 @@ use yii\base\Widget;
 
 class TimelineTable extends Widget
 {
+    public $zone_id;
+
     public function run()
     {
         return $this->render('timeline-table', [
-            'count' => Robot::countRobots(['zone_id' => 1])
+            'count' => Robot::countRobots(['zone_id' => $this->zone_id])
         ]);
     }
 }

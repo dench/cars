@@ -29,7 +29,7 @@ $config = [
                 '<action:(login|signup)>' => 'user/<action>',
                 'admin' => 'admin/default/index',
                 'personal' => 'personal/default/index',
-                'personal/<controller:timeline>' => 'personal/<controller>/index',
+                '<controller:timeline|game>' => '<controller>/index',
                 'blog' => 'blog/index',
             ],
         ],

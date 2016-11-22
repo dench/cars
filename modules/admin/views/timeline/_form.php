@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Zone;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -13,6 +14,8 @@ use yii\widgets\ActiveForm;
 <?= $form->field($model, 'user_id')->textInput() ?>
 
 <?= $form->field($model, 'robot_id')->textInput() ?>
+
+<?= $form->field($model, 'zone_id')->dropDownList(Zone::getList(['!=', 'status',  Zone::STATUS_DISABLED])) ?>
 
 <?= $form->field($model, 'from')->textInput(['value' => Yii::$app->formatter->asDatetime($model->from ?? (time() + abs(30 - date('i', time()))*60))]) ?>
 
