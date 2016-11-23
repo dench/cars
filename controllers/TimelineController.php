@@ -18,7 +18,8 @@ class TimelineController extends \yii\web\Controller
             foreach ($_POST['Timeline'] as $i) {
                 $models[] = new Timeline([
                     'scenario' => Timeline::SCENARIO_TIMELINE,
-                    'zone_id' => $zone_id
+                    'zone_id' => $zone_id,
+                    'user_id' => Yii::$app->user->id
                 ]);
             }
             if (Model::loadMultiple($models, Yii::$app->request->post()) && Model::validateMultiple($models)) {

@@ -17,6 +17,10 @@ use Yii;
  */
 class MqttUser extends \yii\db\ActiveRecord
 {
+    const SCENARIO_CREATE = 'create';
+
+    public $password;
+
     /**
      * @inheritdoc
      */
@@ -31,9 +35,9 @@ class MqttUser extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['pw'], 'required'],
+            [['password'], 'required', 'on' => self::SCENARIO_CREATE],
+            [['password'], 'string', 'max' => 100],
             [['super'], 'boolean'],
-            [['pw'], 'string', 'max' => 100],
         ];
     }
 
@@ -58,7 +62,7 @@ class MqttUser extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'pw' => 'Pw',
+            'password' => Yii::t('app', 'Password'),
             'super' => Yii::t('app', 'Super'),
         ];
     }
@@ -85,5 +89,14 @@ class MqttUser extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['mqtt_id' => 'id']);
+    }
+
+    public function beforeSave($insert)
+    {
+        if (!empty($this->password)) {
+            $this->pw = exec("np -p " . escapeshellarg($this->password));
+        }
+
+        return parent::beforeSave($insert);
     }
 }

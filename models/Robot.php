@@ -99,4 +99,31 @@ class Robot extends \yii\db\ActiveRecord
     {
         return self::find()->andWhere(['zone_id' => $zone_id])->andWhere(['!=', 'status', self::STATUS_DISABLED])->count();
     }
+
+    /**
+     * Список robot_id свободных роботов на полигоне
+     *
+     * @param $zone_id
+     * @return array
+     */
+    public static function freeRobots($zone_id)
+    {
+        $busy = self::busyRobots($zone_id);
+
+        $all = self::find()->select(['id'])->andWhere(['zone_id' => $zone_id])->andWhere(['!=', 'status', self::STATUS_DISABLED])->column();
+
+        return array_diff($all, $busy);
+    }
+
+    /**
+     * Список robot_id занятых роботов на полигоне
+     *
+     * @param $zone_id
+     * @param null $time
+     * @return array
+     */
+    public static function busyRobots($zone_id, $time = null)
+    {
+        return Timeline::busyRobots($zone_id, $time);
+    }
 }

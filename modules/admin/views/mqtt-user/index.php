@@ -30,9 +30,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('app', 'Name'),
                 'value' => function ($model) {
                     if (empty($model->robot->id)) {
-                        return  $model->user->username;
+                        return  @$model->user->username;
                     } else {
-                        return  $model->robot->name;
+                        return  @$model->robot->name;
                     }
                 }
             ],

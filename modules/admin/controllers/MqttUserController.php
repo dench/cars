@@ -65,6 +65,8 @@ class MqttUserController extends Controller
     {
         $model = new MqttUser();
 
+        $model->scenario = MqttUser::SCENARIO_CREATE;
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {

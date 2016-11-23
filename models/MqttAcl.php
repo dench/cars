@@ -33,7 +33,7 @@ class MqttAcl extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['mqtt_id', 'topic', 'rw'], 'required'],
+            [['mqtt_id', 'topic'], 'required'],
             [['mqtt_id', 'rw'], 'integer'],
             [['topic'], 'string', 'max' => 255],
             [['mqtt_id'], 'exist', 'skipOnError' => true, 'targetClass' => MqttUser::className(), 'targetAttribute' => ['mqtt_id' => 'id']],
@@ -77,5 +77,46 @@ class MqttAcl extends \yii\db\ActiveRecord
     public function getClient()
     {
         return $this->hasOne(MqttUser::className(), ['id' => 'mqtt_id']);
+    }
+
+    /**
+     * Установка прав доступа пользователю к топику робота
+     *
+     * @param $mqtt_id
+     * @param $robot_id
+     * @param $zone_id
+     * @return bool
+     */
+    public static function createAcls($mqtt_id, $robot_id, $zone_id)
+    {
+        if (!$zone = Zone::findOne($zone_id)) return false;
+
+        if (!$robot = Robot::findOne($robot_id)) return false;
+
+        $acl = self::find()->andWhere(['mqtt_id' => $mqtt_id])->andWhere(['like', 'topic', '#'])->one();
+
+        if (!$acl) {
+            $acl = new MqttAcl();
+            $acl->mqtt_id = $mqtt_id;
+            $acl->rw = self::WRITE_ONLY;
+        }
+
+        $topic = $zone->name . "/" . $robot->name . "/#";
+
+
+        if ($acl->topic == $topic) {
+            return false;
+        } else {
+            $acl->topic = $topic;
+        }
+
+        if ($old = self::findOne(['topic' => $acl->topic])) {
+            $old->topic = "/none/#";
+            $old->save();
+        }
+
+        $acl->save();
+
+        return true;
     }
 }

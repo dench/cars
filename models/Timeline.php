@@ -2,7 +2,6 @@
 
 namespace app\models;
 
-use app\behaviors\CreatorBehavior;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\validators\DateValidator;
@@ -53,6 +52,9 @@ class Timeline extends ActiveRecord
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     public function scenarios()
     {
         $scenarios = parent::scenarios();
@@ -100,6 +102,9 @@ class Timeline extends ActiveRecord
         return $this->hasOne(Zone::className(), ['id' => 'zone_id']);
     }
 
+    /**
+     * Валидация, чтоб время До не было меньше времени От
+     */
     public function validateCompareTime()
     {
         if ($this->to <= $this->from) {
@@ -107,6 +112,12 @@ class Timeline extends ActiveRecord
         }
     }
 
+    /**
+     * Валидация времени, чтоб небыло накладок
+     *
+     * @param $attribute
+     * @param $params
+     */
     public function validateReserved($attribute, $params)
     {
         $robots = Robot::countRobots($this->zone_id);
@@ -124,6 +135,12 @@ class Timeline extends ActiveRecord
         }
     }
 
+    /**
+     * Ячейки времени которые зарезервированы От и До
+     *
+     * @param null $params
+     * @return array
+     */
     public static function reservedFromTo($params = null)
     {
         $query = self::find()
@@ -146,6 +163,9 @@ class Timeline extends ActiveRecord
 
     /**
      * Ячейки времени которые уже зарезервированы
+     *
+     * @param null $params
+     * @return array
      */
     public static function reserved($params = null)
     {
@@ -191,6 +211,8 @@ class Timeline extends ActiveRecord
 
     /**
      * Ячейки времени которые нельзя выбрать, потому что время уже прошло
+     *
+     * @return array
      */
     public static function passed()
     {
@@ -206,11 +228,40 @@ class Timeline extends ActiveRecord
         return $items;
     }
 
-    public function beforeValidate()
+    /**
+     * Информация про следующую игру пользователя
+     *
+     * @param int $user_id
+     * @return array|null
+     */
+    public static function nextGame($user_id = null)
     {
-        return parent::beforeValidate();
+        if ($user_id === null) {
+            $user_id = Yii::$app->user->id;
+        }
+
+        return self::find()->andWhere(['user_id' => $user_id])->andWhere(['>', 'to', time()])->asArray()->one();
     }
 
+    /**
+     * Список robot_id занятых роботов на полигоне
+     *
+     * @param $zone_id
+     * @param null $time
+     * @return array
+     */
+    public static function busyRobots($zone_id, $time = null)
+    {
+        if ($time === null) {
+            $time = time();
+        }
+
+        return self::find()->select(['robot_id'])->andWhere(['zone_id' => $zone_id])->andWhere(['<=', 'from', $time])->andWhere(['>=', 'to', $time])->andWhere(['is not', 'robot_id', null])->asArray()->column();
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function beforeSave($insert)
     {
         if ($to = self::findOne(['to' => $this->from, 'user_id' => $this->user_id])) {
