@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\behaviors\CreatorBehavior;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\validators\DateValidator;
@@ -39,15 +40,15 @@ class Timeline extends ActiveRecord
     public function rules()
     {
         return [
-            [['from', 'to', 'zone_id'], 'required'],
-            [['user_id', 'robot_id'], 'integer'],
+            [['user_id', 'zone_id', 'from', 'to'], 'required'],
+            [['user_id', 'robot_id', 'zone_id'], 'integer'],
             [['from', 'to'], 'integer', 'on' => self::SCENARIO_TIMELINE],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['robot_id'], 'exist', 'skipOnError' => true, 'targetClass' => Robot::className(), 'targetAttribute' => ['robot_id' => 'id']],
             [['zone_id'], 'exist', 'skipOnError' => true, 'targetClass' => Zone::className(), 'targetAttribute' => ['zone_id' => 'id']],
             ['from', 'datetime', 'type' => DateValidator::TYPE_DATETIME, 'timestampAttribute' => 'from', 'on' => self::SCENARIO_ADMIN],
             ['to', 'datetime', 'type' => DateValidator::TYPE_DATETIME, 'timestampAttribute' => 'to', 'on' => self::SCENARIO_ADMIN],
-            ['to', 'compare', 'compareAttribute' => 'from', 'operator' => '>'],
+            ['to', 'validateCompareTime'],
             [['from', 'to'], 'validateReserved'],
         ];
     }
@@ -67,10 +68,11 @@ class Timeline extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'user_id' => Yii::t('app', 'User ID'),
-            'robot_id' => Yii::t('app', 'Robot ID'),
+            'user_id' => 'User ID',
+            'robot_id' => 'Robot ID',
             'from' => Yii::t('app', 'From'),
             'to' => Yii::t('app', 'To'),
+            'zone_id' => 'Zone ID',
         ];
     }
 
@@ -98,31 +100,28 @@ class Timeline extends ActiveRecord
         return $this->hasOne(Zone::className(), ['id' => 'zone_id']);
     }
 
+    public function validateCompareTime()
+    {
+        if ($this->to <= $this->from) {
+            $this->addError('to', 'The "To" must be greater than the "From".');
+        }
+    }
+
     public function validateReserved($attribute, $params)
     {
-        $count = Robot::countRobots(['zone_id' => $this->zone_id]);
+        $robots = Robot::countRobots($this->zone_id);
 
-        $query = self::find()->where(['and', ['!=', '']]);
+        $query = self::find()->andWhere(['<', 'from', $this->$attribute])->andWhere(['>', 'to', $this->$attribute]);
 
-        /*if (self::find()
-            ->andWhere(['<', 'from', $this->$attribute])->andWhere(['>', 'to', $this->$attribute])
-            ->andFilterWhere(['!=', 'id', $this->id])
-            ->count() +
-            self::find()
-                ->andWhere(['>', 'from', $this->from])->andWhere(['<', 'to', $this->to])
-                ->andFilterWhere(['!=', 'id', $this->id])
-                ->count() >= $count) {
-            $this->addError($attribute, Yii::t('app', 'Time has been reserved by somebody.'));
-        } elseif (self::find()
-            ->andWhere(['<', 'from', $this->$attribute])->andWhere(['>', 'to', $this->$attribute])
-            ->andWhere(['user_id' => $this->user_id])
-            ->count() +
-            self::find()
-                ->andWhere(['>', 'from', $this->from])->andWhere(['<', 'to', $this->to])
-                ->andWhere(['user_id' => $this->user_id])
-                ->count()) {
-            $this->addError($attribute, Yii::t('app', 'Time has been reserved for you.'));
-        }*/
+        if ($attribute == 'to') {
+            $query->orWhere(['and', ['>=', 'from', $this->from], ['<=', 'to', $this->to]]);
+        }
+
+        $query->andFilterWhere(['!=', 'id', $this->id]);
+
+        if ($query->count() >= $robots || $query->andWhere(['user_id' => $this->user_id])->count()) {
+            $this->addError($attribute, Yii::t('app', 'Time has been reserved.'));
+        }
     }
 
     public static function reservedFromTo($params = null)
@@ -209,16 +208,11 @@ class Timeline extends ActiveRecord
 
     public function beforeValidate()
     {
-        if (empty($this->user_id)) {
-            $this->user_id = Yii::$app->user->id;
-        }
-
         return parent::beforeValidate();
     }
 
     public function beforeSave($insert)
     {
-        //die();
         if ($to = self::findOne(['to' => $this->from, 'user_id' => $this->user_id])) {
             $this->from = $to->from;
             $to->delete();

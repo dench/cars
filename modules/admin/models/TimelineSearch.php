@@ -80,7 +80,7 @@ class TimelineSearch extends Timeline
             'to' => $this->to,
         ]);
 
-        $query->andFilterWhere(['>', 'timeline.to', time()]);
+        //$query->andFilterWhere(['>', 'timeline.to', time()]);
         $query->andFilterWhere(['like', 'user.username', $this->username]);
         $query->andFilterWhere(['like', 'robot.name', $this->username]);
 

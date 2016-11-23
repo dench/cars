@@ -11,12 +11,16 @@ use Yii;
  * @property integer $mqtt_id
  * @property string $name
  * @property integer $zone_id
+ * @property integer $status
  *
  * @property MqttUser $client
  * @property Zone $zone
  */
 class Robot extends \yii\db\ActiveRecord
 {
+    const STATUS_DISABLED = 0;
+    const STATUS_ENABLED = 1;
+
     /**
      * @inheritdoc
      */
@@ -31,12 +35,28 @@ class Robot extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['mqtt_id', 'zone_id'], 'integer'],
+            [['mqtt_id', 'zone_id', 'status'], 'integer'],
             [['name'], 'required'],
             [['name'], 'string', 'max' => 20],
             [['mqtt_id'], 'exist', 'skipOnError' => true, 'targetClass' => MqttUser::className(), 'targetAttribute' => ['mqtt_id' => 'id']],
             [['zone_id'], 'exist', 'skipOnError' => true, 'targetClass' => Zone::className(), 'targetAttribute' => ['zone_id' => 'id']],
+            ['status', 'default', 'value' => self::STATUS_ENABLED],
+            ['status', 'in', 'range' => [self::STATUS_ENABLED, self::STATUS_DISABLED]],
         ];
+    }
+
+    public static function statusList()
+    {
+        return [
+            self::STATUS_DISABLED => Yii::t('app', 'Disabled'),
+            self::STATUS_ENABLED => Yii::t('app', 'Enabled')
+        ];
+    }
+
+    public function getStatusName()
+    {
+        $a = self::statusList();
+        return $a[$this->status];
     }
 
     /**
@@ -45,10 +65,11 @@ class Robot extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'mqtt_id' => Yii::t('app', 'Mqtt ID'),
+            'id' => 'ID',
+            'mqtt_id' => 'Mqtt ID',
             'name' => Yii::t('app', 'Name'),
-            'zone_id' => Yii::t('app', 'Zone')
+            'zone_id' => Yii::t('app', 'Zone'),
+            'status' => Yii::t('app', 'Status'),
         ];
     }
 
@@ -68,8 +89,14 @@ class Robot extends \yii\db\ActiveRecord
         return $this->hasOne(Zone::className(), ['id' => 'zone_id']);
     }
 
-    public static function countRobots($condition = null)
+    /**
+     * Количество роботов на зоне
+     *
+     * @param null $condition
+     * @return int
+     */
+    public static function countRobots($zone_id)
     {
-        return self::find()->where($condition)->count();
+        return self::find()->andWhere(['zone_id' => $zone_id])->andWhere(['!=', 'status', self::STATUS_DISABLED])->count();
     }
 }

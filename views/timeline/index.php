@@ -6,21 +6,6 @@ use app\widgets\TimelineTable;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-echo \app\models\Timeline::find()->where(
-    ['and',
-        ['!=', 'id', 2],
-        ['or',
-            ['and',
-                ['<', 'from', 1],
-                ['>', 'to', 1]
-            ],
-            ['and',
-                ['<', 'from', 1],
-                ['>', 'to', 1]
-            ]
-        ]
-    ])->createCommand()->rawSql;
-
 ?>
 
 <?= TimelineTable::widget(['zone_id' => $zone->id]) ?>

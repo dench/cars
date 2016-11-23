@@ -119,6 +119,7 @@ class User extends ActiveRecord implements IdentityInterface
             'password' => Yii::t('app', 'Password'),
             'energy' => Yii::t('app', 'Energy'),
             'timezone' => Yii::t('app', 'Timezone'),
+            'mqtt_id' => 'Mqtt ID',
         ];
     }
 

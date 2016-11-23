@@ -18,7 +18,7 @@ class TimelineTable extends Widget
     public function run()
     {
         return $this->render('timeline-table', [
-            'count' => Robot::countRobots(['zone_id' => $this->zone_id])
+            'count' => Robot::countRobots($this->zone_id)
         ]);
     }
 }
