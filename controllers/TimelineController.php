@@ -30,11 +30,10 @@ class TimelineController extends \yii\web\Controller
             }
         }
 
-        $temp = Timeline::reserved();
-
-        foreach ($temp as $k => $v) {
+        //$temp = Timeline::reserved();
+        //foreach ($temp as $k => $v) {
             //echo Yii::$app->formatter->asDatetime($k)."<br>";
-        }
+        //}
 
         $zone = Zone::findOne(1);
 

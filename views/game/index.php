@@ -2,6 +2,7 @@
 /** @var $this yii\web\View */
 /** @var $timeline */
 
+//use app\models\Robot;
 use yii\helpers\Url;
 
 $url = Url::to(['game/start']);
@@ -49,6 +50,22 @@ function getTimeRemaining(endtime) {
 JS;
 
 $this->registerJs($js);
+
+/*$robot = Robot::findOne(2);
+$data['user'] = "dench";
+$data['password'] = "12345";
+
+$url = $robot->address."/set_users.cgi?loginuse=admin&loginpas=rclink&user1=&pwd1=&pri1=1&user2=".$data['user']."&pwd2=".$data['password']."&pri2=2&user3=admin&pwd3=rclink&pri3=255";
+
+$result = file_get_contents($url);
+
+if (strpos($result, '"ok"')) {
+    $url = $robot->address."/reboot.cgi?user=admin&pwd=rclink";
+    $result = file_get_contents($url);
+    if (strpos($result, '"ok"')) {
+        echo "OK";
+    }
+}*/
 ?>
 
 <div class="camarea">

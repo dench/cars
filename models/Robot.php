@@ -12,6 +12,7 @@ use Yii;
  * @property string $name
  * @property integer $zone_id
  * @property integer $status
+ * @property string $address
  *
  * @property MqttUser $client
  * @property Zone $zone
@@ -42,6 +43,7 @@ class Robot extends \yii\db\ActiveRecord
             [['zone_id'], 'exist', 'skipOnError' => true, 'targetClass' => Zone::className(), 'targetAttribute' => ['zone_id' => 'id']],
             ['status', 'default', 'value' => self::STATUS_ENABLED],
             ['status', 'in', 'range' => [self::STATUS_ENABLED, self::STATUS_DISABLED]],
+            [['address'], 'url']
         ];
     }
 
@@ -70,6 +72,7 @@ class Robot extends \yii\db\ActiveRecord
             'name' => Yii::t('app', 'Name'),
             'zone_id' => Yii::t('app', 'Zone'),
             'status' => Yii::t('app', 'Status'),
+            'address' => Yii::t('app', 'Address'),
         ];
     }
 

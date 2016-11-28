@@ -20,6 +20,8 @@ use yii\widgets\ActiveForm;
 
 <?= $form->field($model, 'mqtt_id')->textInput() ?>
 
+<?= $form->field($model, 'address')->textInput(['maxlength' => true]); ?>
+
 <div class="form-group">
     <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
 </div>

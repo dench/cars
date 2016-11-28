@@ -170,11 +170,11 @@ class Timeline extends ActiveRecord
     public static function reserved($params = null)
     {
         if (empty($params['from'])) {
-            $params['from'] = time();
+            $params['from'] = mktime(0, 0, 0);
         }
 
         if (empty($params['to'])) {
-            $params['to'] = time()+3600*24*7;
+            $params['to'] = $params['from']+3600*24*7;
         }
 
         $models = self::reservedFromTo($params);
@@ -240,7 +240,7 @@ class Timeline extends ActiveRecord
             $user_id = Yii::$app->user->id;
         }
 
-        return self::find()->andWhere(['user_id' => $user_id])->andWhere(['>', 'to', time()])->asArray()->one();
+        return self::find()->andWhere(['user_id' => $user_id])->andWhere(['>', 'to', time()])->orderBy(['from' => SORT_ASC])->asArray()->one();
     }
 
     /**

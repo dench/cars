@@ -64,12 +64,32 @@ class GameController extends \yii\web\Controller
             } else {
                 $mqtt = new MqttUser();
             }
-            $mqtt->password = substr(md5(rand(10000, 99999)), 0, 10);
+            $mqtt->password = substr(md5(rand(10000, 99999)), 0, 8);
             $mqtt->save();
 
             MqttAcl::createAcls($mqtt->id, $timeline->robot_id, $timeline->zone_id);
 
+            $data['user'] = ($user->username == 'admin') ? 'none' : $user->username;
             $data['password'] = $mqtt->password;
+
+            $robot = Robot::findOne($timeline->robot_id);
+
+            $url = $robot->address."/set_users.cgi?loginuse=admin&loginpas=rclink&user1=&pwd1=&pri1=1&user2=".$data['user']."&pwd2=".$data['password']."&pri2=2&user3=admin&pwd3=rclink&pri3=255";
+
+            $result = file_get_contents($url);
+
+            if (strpos($result, '"ok"')) {
+                $url = $robot->address."/reboot.cgi?user=admin&pwd=rclink";
+                $result = file_get_contents($url);
+                if (strpos($result, '"ok"')) {
+                    $data['result'] = "OK";
+                    $data['url'] = $robot->address."/videostream.cgi?user=".$data['user']."&pwd=".$data['password'];
+                } else {
+                    $data['result'] = "Error #reboot";
+                }
+            } else {
+                $data['result'] = "Error #set_users";
+            }
 
             return $data;
         }
