@@ -2,8 +2,9 @@
 /** @var $this yii\web\View */
 /** @var $timeline */
 
-//use app\models\Robot;
+use app\models\Robot;
 use yii\helpers\Url;
+use yii\httpclient\Client;
 
 $url = Url::to(['game/start']);
 $from = @$timeline['from']+0;
@@ -28,6 +29,9 @@ function updateClock() {
         if ($id) {
             $.post('{$url}', { id: {$id} }, function(data) {
                 console.log(data);
+                if (data.status == 'Ok #match') {
+                    $('.camarea-view').attr('src', data.url);
+                }
             }, 'json');
         }
     }
@@ -50,26 +54,10 @@ function getTimeRemaining(endtime) {
 JS;
 
 $this->registerJs($js);
-
-/*$robot = Robot::findOne(2);
-$data['user'] = "dench";
-$data['password'] = "12345";
-
-$url = $robot->address."/set_users.cgi?loginuse=admin&loginpas=rclink&user1=&pwd1=&pri1=1&user2=".$data['user']."&pwd2=".$data['password']."&pri2=2&user3=admin&pwd3=rclink&pri3=255";
-
-$result = file_get_contents($url);
-
-if (strpos($result, '"ok"')) {
-    $url = $robot->address."/reboot.cgi?user=admin&pwd=rclink";
-    $result = file_get_contents($url);
-    if (strpos($result, '"ok"')) {
-        echo "OK";
-    }
-}*/
 ?>
 
 <div class="camarea">
     <div class="camarea-info">Игра начнется в <?= Yii::$app->formatter->asTime($timeline['from']) ?><br>через <span class="minutes">0</span> мин <span class="seconds">0</span> сек</div>
-    <img src="/img/camarea_none.jpg" alt="Game Area" class="camarea-view">
+    <img src="/img/camarea_none.jpg" alt="Game View" class="camarea-view">
 </div>
 

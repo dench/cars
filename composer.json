@@ -24,7 +24,8 @@
         "2amigos/yii2-ckeditor-widget": "~1.0",
         "bower-asset/fortawesome/font-awesome": "*",
         "omgdef/yii2-multilingual-behavior": "*",
-        "kartik-v/yii2-widget-datepicker": "@dev"
+        "kartik-v/yii2-widget-datepicker": "@dev",
+        "yiisoft/yii2-httpclient": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "*",

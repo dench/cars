@@ -9,6 +9,7 @@ use app\models\Timeline;
 use app\models\User;
 use Yii;
 use yii\filters\VerbFilter;
+use yii\httpclient\Client;
 use yii\web\Response;
 
 class GameController extends \yii\web\Controller
@@ -34,6 +35,9 @@ class GameController extends \yii\web\Controller
         ]);
     }
 
+    /**
+     * @return bool
+     */
     public function actionStart()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -57,39 +61,62 @@ class GameController extends \yii\web\Controller
                 $timeline->save();
             }
 
+            $robot = Robot::findOne($timeline->robot_id);
             $user = User::findOne($timeline->user_id);
-
             if ($user->mqtt_id) {
                 $mqtt = MqttUser::findOne($user->mqtt_id);
             } else {
                 $mqtt = new MqttUser();
             }
-            $mqtt->password = substr(md5(rand(10000, 99999)), 0, 8);
-            $mqtt->save();
+            $client = new Client();
+            $client->baseUrl = $robot->address;
 
-            MqttAcl::createAcls($mqtt->id, $timeline->robot_id, $timeline->zone_id);
+            $response = $client->get('get_params.cgi', ['user' => $robot->name, 'pwd' => $robot->password])->send();
 
-            $data['user'] = ($user->username == 'admin') ? 'none' : $user->username;
-            $data['password'] = $mqtt->password;
+            preg_match('/user2_name="(.*?)".+?var user2_pwd="(.*?)"/s', $response->content, $out);
 
-            $robot = Robot::findOne($timeline->robot_id);
+            if ($out[1] != $user->username) {
 
-            $url = $robot->address."/set_users.cgi?loginuse=admin&loginpas=rclink&user1=&pwd1=&pri1=1&user2=".$data['user']."&pwd2=".$data['password']."&pri2=2&user3=admin&pwd3=rclink&pri3=255";
+                $mqtt->password = substr(md5(rand(10000, 99999)), 0, 8);
+                $mqtt->save();
 
-            $result = file_get_contents($url);
+                MqttAcl::createAcls($mqtt->id, $timeline->robot_id, $timeline->zone_id);
 
-            if (strpos($result, '"ok"')) {
-                $url = $robot->address."/reboot.cgi?user=admin&pwd=rclink";
-                $result = file_get_contents($url);
-                if (strpos($result, '"ok"')) {
-                    $data['result'] = "OK";
-                    $data['url'] = $robot->address."/videostream.cgi?user=".$data['user']."&pwd=".$data['password'];
+                $data['user'] = ($user->username == 'admin') ? 'none' : $user->username;
+                $data['password'] = $mqtt->password;
+
+                $response = $client->get('set_users.cgi', [
+                    'loginuse' => $robot->name,
+                    'loginpas' => $robot->password,
+                    'user1' => '',
+                    'pwd1' => '',
+                    'pri1' => 1,
+                    'user2' => $data['user'],
+                    'pwd2' => $data['password'],
+                    'pri2' => 2,
+                    'user3' => $robot->name,
+                    'pwd3' => $robot->password,
+                    'pri3' => 255
+                ])->send();
+
+                if (strpos($response, '"ok"')) {
+                    $response = $client->get('reboot.cgi', ['user' => $robot->name, 'pwd' => $robot->password]);
+                    if (strpos($response, '"ok"')) {
+                        $data['status'] = "Ok #reboot";
+                    } else {
+                        $data['status'] = "Error #reboot";
+                    }
                 } else {
-                    $data['result'] = "Error #reboot";
+                    $data['status'] = "Error #set_users";
                 }
+
             } else {
-                $data['result'] = "Error #set_users";
+                $data['user'] = $out[1];
+                $data['password'] = $out[2];
+                $data['status'] = "Ok #match";
             }
+
+            $data['url'] = $robot->address."/videostream.cgi?user=".$data['user']."&pwd=".$data['password'];
 
             return $data;
         }

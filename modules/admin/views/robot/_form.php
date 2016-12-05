@@ -14,6 +14,8 @@ use yii\widgets\ActiveForm;
 
 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
+<?= $form->field($model, 'password')->textInput(['maxlength' => true]) ?>
+
 <?= $form->field($model, 'zone_id')->dropDownList(Zone::getList(['!=', 'status',  Zone::STATUS_DISABLED]), ['prompt' => '-']) ?>
 
 <?= $form->field($model, 'status')->dropDownList(Robot::statusList()) ?>

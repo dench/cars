@@ -13,6 +13,7 @@ use Yii;
  * @property integer $zone_id
  * @property integer $status
  * @property string $address
+ * @property string $password
  *
  * @property MqttUser $client
  * @property Zone $zone
@@ -37,8 +38,8 @@ class Robot extends \yii\db\ActiveRecord
     {
         return [
             [['mqtt_id', 'zone_id', 'status'], 'integer'],
-            [['name'], 'required'],
-            [['name'], 'string', 'max' => 20],
+            [['name', 'password'], 'required'],
+            [['name', 'password'], 'string', 'max' => 20],
             [['mqtt_id'], 'exist', 'skipOnError' => true, 'targetClass' => MqttUser::className(), 'targetAttribute' => ['mqtt_id' => 'id']],
             [['zone_id'], 'exist', 'skipOnError' => true, 'targetClass' => Zone::className(), 'targetAttribute' => ['zone_id' => 'id']],
             ['status', 'default', 'value' => self::STATUS_ENABLED],
@@ -73,6 +74,7 @@ class Robot extends \yii\db\ActiveRecord
             'zone_id' => Yii::t('app', 'Zone'),
             'status' => Yii::t('app', 'Status'),
             'address' => Yii::t('app', 'Address'),
+            'password' => Yii::t('app', 'Password'),
         ];
     }
 
