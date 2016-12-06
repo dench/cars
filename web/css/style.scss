@@ -185,6 +185,23 @@ body {
   }
 }
 
+.mqtt-status div {
+  text-align: center;
+  font-size: 2rem;
+}
+.loading {
+  color: #999;
+  display: block;
+}
+.mqtt-connected {
+  color: green;
+  display: none;
+}
+.mqtt-disconnect {
+  color: firebrick;
+  display: none;
+}
+
 @media (max-width: $screen-xs-max) {
 
 }

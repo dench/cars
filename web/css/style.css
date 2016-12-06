@@ -123,4 +123,20 @@ body {
     color: #444;
     top: 4%; }
 
+.mqtt-status div {
+  text-align: center;
+  font-size: 2rem; }
+
+.loading {
+  color: #999;
+  display: block; }
+
+.mqtt-connected {
+  color: green;
+  display: none; }
+
+.mqtt-disconnect {
+  color: firebrick;
+  display: none; }
+
 /*# sourceMappingURL=style.css.map */

@@ -21,6 +21,7 @@ class GameController extends \yii\web\Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'start' => ['post'],
+                    'camera-y' => ['post'],
                 ],
             ],
         ];
@@ -33,6 +34,40 @@ class GameController extends \yii\web\Controller
         return $this->render('index', [
             'timeline' => $timeline,
         ]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function actionCameraY()
+    {
+        if (Yii::$app->request->isAjax) {
+
+            $post = Yii::$app->request->post();
+            $val = 30+($post['val']-1)*2+1;
+
+            if (!in_array($val, [31,33,35])) return false;
+
+            $robot = Robot::findOne(['name' => $post['robot']]);
+
+            if (!$robot) return false;
+
+            $client = new Client();
+            $client->baseUrl = $robot->address;
+            $response = $client->get('decoder_control.cgi', [
+                'command' => $val,
+                //'sit' => $val,
+                //'onestep' => 0,
+                'user' => $robot->name,
+                'pwd' => $robot->password
+            ])->send();
+
+            if (!strpos($response->content, '"ok"')) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -75,10 +110,15 @@ class GameController extends \yii\web\Controller
 
             preg_match('/user2_name="(.*?)".+?var user2_pwd="(.*?)"/s', $response->content, $out);
 
+            $data['id'] = $user->mqtt_id;
+
             if ($out[1] != $user->username) {
 
                 $mqtt->password = substr(md5(rand(10000, 99999)), 0, 8);
-                $mqtt->save();
+                if ($mqtt->save() && !$user->mqtt_id) {
+                    $user->mqtt_id = $mqtt->id;
+                    $user->save();
+                }
 
                 MqttAcl::createAcls($mqtt->id, $timeline->robot_id, $timeline->zone_id);
 
@@ -99,9 +139,9 @@ class GameController extends \yii\web\Controller
                     'pri3' => 255
                 ])->send();
 
-                if (strpos($response, '"ok"')) {
-                    $response = $client->get('reboot.cgi', ['user' => $robot->name, 'pwd' => $robot->password]);
-                    if (strpos($response, '"ok"')) {
+                if (strpos($response->content, '"ok"')) {
+                    $response = $client->get('reboot.cgi', ['user' => $robot->name, 'pwd' => $robot->password])->send();
+                    if (strpos($response->content, '"ok"')) {
                         $data['status'] = "Ok #reboot";
                     } else {
                         $data['status'] = "Error #reboot";
@@ -115,6 +155,12 @@ class GameController extends \yii\web\Controller
                 $data['password'] = $out[2];
                 $data['status'] = "Ok #match";
             }
+
+            $data['robot'] = $robot->name;
+
+            $data['address'] = $robot->address;
+
+            $data['zone'] = $timeline->zone->name;
 
             $data['url'] = $robot->address."/videostream.cgi?user=".$data['user']."&pwd=".$data['password'];
 

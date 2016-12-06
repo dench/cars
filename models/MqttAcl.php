@@ -110,7 +110,7 @@ class MqttAcl extends \yii\db\ActiveRecord
             $acl->topic = $topic;
         }
 
-        if ($old = self::findOne(['topic' => $acl->topic])) {
+        if ($old = self::findOne(['topic' => $acl->topic, 'rw' => self::WRITE_ONLY])) {
             $old->topic = "/none/#";
             $old->save();
         }
